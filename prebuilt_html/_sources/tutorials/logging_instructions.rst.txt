@@ -41,9 +41,9 @@ Usages of Weights & Biases
 `Weights & Biases <https://wandb.ai/>`_ is a online *platform helps you streamline your ML workflow from end to end*.
 It could track your version automatically and visualize your training data uploaded from different devices.
 
-We've integrate its package ``wandb`` in dist-MARL and it can be activated by simply setting the value of ``common_kwargs.use_wandb`` to ``True``.
+We've integrated its package ``wandb`` in dist-MARL and it can be activated by simply setting the value of ``common_kwargs.use_wandb`` to ``True``.
 
-.. TODO: instructions for wandb
+**TODO**: instructions for wandb
 
 
 Usages of TensorBoard

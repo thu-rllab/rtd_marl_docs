@@ -435,7 +435,7 @@ Here we also use *GRF* as the example to show it.
         return env
 
 .. code-block:: python
-    :lineno-start: 30
+    :lineno-start: 168
 
     if envs.gfootball_support:
         import gym
@@ -448,4 +448,6 @@ Here we also use *GRF* as the example to show it.
         del grf_env
 
 
-Congradulations! Once the new integrated environment passes the unit test, it should be well compatible into dist-MARL.
+**Congratulations!**
+
+Once the new integrated environment passes the unit test, it should be well compatible into dist-MARL.

@@ -469,18 +469,19 @@ Here we also use <em>GRF</em> as the example to show it.</p>
 <span class="linenos">63</span>    <span class="k">return</span> <span class="n">env</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">30</span><span class="k">if</span> <span class="n">envs</span><span class="o">.</span><span class="n">gfootball_support</span><span class="p">:</span>
-<span class="linenos">31</span>    <span class="kn">import</span> <span class="nn">gym</span>
-<span class="linenos">32</span>
-<span class="linenos">33</span>    <span class="c1"># test Google Research Football Environment</span>
-<span class="linenos">34</span>    <span class="n">grf_env</span> <span class="o">=</span> <span class="n">createGRFEnv</span><span class="p">()</span>
-<span class="linenos">35</span>    <span class="n">testEnvironmentAPI</span><span class="p">(</span><span class="n">grf_env</span><span class="p">)</span>
-<span class="linenos">36</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------&quot;</span><span class="p">)</span>
-<span class="linenos">37</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GRF environment has been test successfully!&quot;</span><span class="p">)</span>
-<span class="linenos">38</span>    <span class="k">del</span> <span class="n">grf_env</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">168</span><span class="k">if</span> <span class="n">envs</span><span class="o">.</span><span class="n">gfootball_support</span><span class="p">:</span>
+<span class="linenos">169</span>    <span class="kn">import</span> <span class="nn">gym</span>
+<span class="linenos">170</span>
+<span class="linenos">171</span>    <span class="c1"># test Google Research Football Environment</span>
+<span class="linenos">172</span>    <span class="n">grf_env</span> <span class="o">=</span> <span class="n">createGRFEnv</span><span class="p">()</span>
+<span class="linenos">173</span>    <span class="n">testEnvironmentAPI</span><span class="p">(</span><span class="n">grf_env</span><span class="p">)</span>
+<span class="linenos">174</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">175</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GRF environment has been test successfully!&quot;</span><span class="p">)</span>
+<span class="linenos">176</span>    <span class="k">del</span> <span class="n">grf_env</span>
 </pre></div>
 </div>
-<p>Congradulations! Once the new integrated environment passes the unit test, it should be well compatible into dist-MARL.</p>
+<p><strong>Congratulations!</strong></p>
+<p>Once the new integrated environment passes the unit test, it should be well compatible into dist-MARL.</p>
 </section>
 </section>
 </section>
