@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>envs package &mdash; Distributed Multi-agent Reinforcement Learning v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/marl.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="envs.env_wrappers package" href="envs.env_wrappers.html" />
+    <link rel="prev" title="envs" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Distributed Multi-agent Reinforcement Learning
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/logging_instructions.html">Logging Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/environment_design.html">How to Integrate a Multi-agent Environment into dist-MARL</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/develop_instructions.html">dist-MARL 开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/modify_rpc.html">dist-MARL 的分布式框架介绍</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../internal_docs/common/common_modules.html">Common</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../common/modules.html">common</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">envs</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">envs package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html">envs.env_wrappers package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-envs.ma_env_base">envs.ma_env_base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#envs.ma_env_base.MultiAgentEnvBase"><code class="docutils literal notranslate"><span class="pre">MultiAgentEnvBase</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Distributed Multi-agent Reinforcement Learning</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">envs</a></li>
+      <li class="breadcrumb-item active">envs package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api_docs/envs/envs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="envs-package">
+<h1>envs package<a class="headerlink" href="#envs-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="envs.env_wrappers.html">envs.env_wrappers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="envs.env_wrappers.html#module-envs.env_wrappers.gfootball_wrapper">envs.env_wrappers.gfootball_wrapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.env"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.episode_limit"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.episode_limit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.map_name"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.map_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv._action_spaces"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv._action_spaces</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv._n_agents"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv._n_agents</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv._obs"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv._obs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv._observation_spaces"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv._observation_spaces</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv._seed"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv._seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv._time_step"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv._time_step</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv._checkTermination"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv._checkTermination()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.action_spaces"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.action_spaces</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.close"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getAvailActions"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getAvailActions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getAvailActionsAgent"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getAvailActionsAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getEnvInfo"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getEnvInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getObs"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getObs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getObsAgent"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getObsAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getObsShape"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getObsShape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getState"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getState()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.getStateShape"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.getStateShape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.n_actions"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.n_actions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.n_agents"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.n_agents</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.observation_spaces"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.observation_spaces</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.reset"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.sampleActions"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.sampleActions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.seed"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.gfootball_wrapper.GoogleFootballEnv.step"><code class="docutils literal notranslate"><span class="pre">GoogleFootballEnv.step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="envs.env_wrappers.html#module-envs.env_wrappers.smac_wrapper">envs.env_wrappers.smac_wrapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.env"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.map_name"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.map_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.episode_limit"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.episode_limit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv._seed"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv._seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.close"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getAvailActions"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getAvailActions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getAvailActionsAgent"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getAvailActionsAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getEnvInfo"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getEnvInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getObs"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getObs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getObsAgent"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getObsAgent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getObsShape"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getObsShape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getState"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getState()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.getStateShape"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.getStateShape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.n_actions"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.n_actions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.n_agents"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.n_agents</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.render"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.reset"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.sampleActions"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.sampleActions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.saveReplay"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.saveReplay()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.seed"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.seed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.shield_bits_ally"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.shield_bits_ally</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.step"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.step()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="envs.env_wrappers.html#envs.env_wrappers.smac_wrapper.StarCraftIIEnv.unit_type_bits"><code class="docutils literal notranslate"><span class="pre">StarCraftIIEnv.unit_type_bits</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-envs.ma_env_base">
+<span id="envs-ma-env-base"></span><h2>envs.ma_env_base<a class="headerlink" href="#module-envs.ma_env_base" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">envs.ma_env_base.</span></span><span class="sig-name descname"><span class="pre">MultiAgentEnvBase</span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The base class for multi-agent environments.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>All the methods in the base class are not callable.</p>
+<p>The <strong>Returns</strong> just specifies the uniform return variable lists for all the interfaces.</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.env">
+<span class="sig-name descname"><span class="pre">env</span></span><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.env" title="Permalink to this definition">¶</a></dt>
+<dd><p>The multi-agent environment instance, e.g., SMAC environment and GRF environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>class</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.episode_limit">
+<span class="sig-name descname"><span class="pre">episode_limit</span></span><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.episode_limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum steps of a single episode, and reaching it will lead to <code class="docutils literal notranslate"><span class="pre">terminated=True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase._seed">
+<span class="sig-name descname"><span class="pre">_seed</span></span><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase._seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>The random seed for the environment, private variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override close in your subclass to perform any necessary clean up operations.</p>
+<p>Environments will automatically call this function themselves when garbage collected or when the program exists.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getAvailActions">
+<span class="sig-name descname"><span class="pre">getAvailActions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getAvailActions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getAvailActions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the available actions of all agents in a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>list[np.ndarray] or list[list[int]]</em> – <strong>avail_actions</strong>: A list of available actions for all agents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getAvailActionsAgent">
+<span class="sig-name descname"><span class="pre">getAvailActionsAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getAvailActionsAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getAvailActionsAgent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the available actions for a specific agent given the agent_id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> (<em>int</em>) – The ID for the specific agent.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or list[int]</em> – <strong>avail_agent_actions</strong>: The actions that the agent with the given id can take at the current state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getEnvInfo">
+<span class="sig-name descname"><span class="pre">getEnvInfo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getEnvInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getEnvInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the environment information in a Dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>dict</em> – <strong>env_info_dict</strong>: The environment information, which must contains <code class="docutils literal notranslate"><span class="pre">n_actions,</span> <span class="pre">n_agents,</span> <span class="pre">episode_limit,</span> <span class="pre">obs_size,</span> <span class="pre">state_size</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getObs">
+<span class="sig-name descname"><span class="pre">getObs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getObs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getObs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain all agents’ observations in a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>list[np.ndarray]</em> – <strong>observations</strong>: The list of observations for all agents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getObsAgent">
+<span class="sig-name descname"><span class="pre">getObsAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getObsAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getObsAgent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the observation for a specific agent given the agent_id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent_id</strong> (<em>int</em>) – The ID for the specific agent.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – <strong>observation</strong>: The observation for the agent.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getObsShape">
+<span class="sig-name descname"><span class="pre">getObsShape</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getObsShape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getObsShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the shape of the observation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>tuple or np.ndarray</em> – <strong>obs_shape</strong>: The shape of the observation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getSeed">
+<span class="sig-name descname"><span class="pre">getSeed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getSeed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getSeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the random seed used by this environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em> – <strong>seed</strong>: The random seed (usually a large integer) used by this environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getState">
+<span class="sig-name descname"><span class="pre">getState</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the global state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>np.ndarray</em> – <strong>state</strong>: The global state for all agents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.getStateShape">
+<span class="sig-name descname"><span class="pre">getStateShape</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.getStateShape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.getStateShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the shape of the state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>tuple or np.ndarray</em> – <strong>state_shape</strong>: The shape of the state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.n_actions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_actions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NoReturn</span></em><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.n_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the total number of actions an agent could ever take.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is only suitable for the discrete 1-dimensional action space for each agent case.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em> – <strong>n_actions</strong>: The total number of actions an agent can ever take.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.n_agents">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_agents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NoReturn</span></em><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.n_agents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the number of the agents in this environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>int</em> – <strong>n_agents</strong>: The total number of the agents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render the environment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the state of the environment and return the initial observations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>(list[np.ndarray], np.ndarray)</em> – <strong>(observations, state)</strong>: (The initial observations, The global state for all agents)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.sampleActions">
+<span class="sig-name descname"><span class="pre">sampleActions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.sampleActions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.sampleActions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample random actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>list[int]</em> – <strong>random_actions</strong>: The sampled random actions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.saveReplay">
+<span class="sig-name descname"><span class="pre">saveReplay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.saveReplay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.saveReplay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a replay to the target output folder.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the random seed for this environment instance. If <code class="docutils literal notranslate"><span class="pre">seed==None</span></code>, then a random integer in [1e6, 1e7] will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em><em>, </em><em>optional</em>) – The random seed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="envs.ma_env_base.MultiAgentEnvBase.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/envs/ma_env_base.html#MultiAgentEnvBase.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#envs.ma_env_base.MultiAgentEnvBase.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run one timestep of the environment’s dynamics. When the end of episode is reached, you are responsible for
+calling func <code class="docutils literal notranslate"><span class="pre">reset()</span></code> to reset this environment’s state.</p>
+<p>Accepts the actions and returns a tuple (observations, reward, terminated, info), where:</p>
+<ul class="simple">
+<li><p><strong>observations</strong>: A list of agents’ observations of the current state.</p></li>
+<li><p><strong>reward</strong>: Amount of reward returned after previous actions.</p></li>
+<li><p><strong>terminated (a.k.a. done)</strong>: Whether the episode has ended, in which case further <code class="docutils literal notranslate"><span class="pre">step()</span></code> calls will return undefined results.</p></li>
+<li><p><strong>info</strong>: Contains auxiliary diagnostic information (helpful for debugging, and sometimes learning).</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actions</strong> (<em>np.ndarray</em>) – Actions taken by the agents.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>(list[np.ndarray], float, bool, dict)</em> – <strong>(observations, reward, terminated, info)</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="envs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="envs.env_wrappers.html" class="btn btn-neutral float-right" title="envs.env_wrappers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, thu-rllab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

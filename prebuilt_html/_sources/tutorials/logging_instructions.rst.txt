@@ -1,0 +1,50 @@
+====================
+Logging Instructions
+====================
+
+Several logging toolkits are provided in MARL.
+Here we give brief instructions of how to configure these toolkits.
+
+Usages of ``logging.Logger``
+=============================
+
+We offer the customed ``logging.Logger`` in file :file:`src/utils/logger.py` for simultaneously printing output information 
+to the console and writing it to the log files.
+
+Given the argument ``common_kwargs.logger_args.outputs_folder`` (defaults to ``'outputs'``), the output folder will be created under the root directory.
+The logger file will be named by the name of the module and the created time, from minutes to month, under the directory ``<root_path>/<common_kwargs.logger_args.outputs_folder>
+/<run_cfg>/<created_time>-[<remark>]/``, where the argument ``run_cfg, remark`` can be set by appending the command ``--run_cfg=<run_cfg>`` and ``--remark=<remark>``.
+
+For instance, :file:`<root_path>/outputs/sc2_qmix/2023-01-01_18-21-[sc2--qmix_1]/[module-replay_buffer_server-0]-2023-01-01_18-21.log`
+denotes the log file of replay buffer module at Jan. 1th, 18:21 run by the command
+
+.. code-block:: bash
+    
+    python main.py -m RB --cfg=sc2_qmix --remark=sc2--qmix_1
+
+You can log any information by
+
+.. code-block:: python
+
+    # the level is increased from ``debug()`` to ``critical()``
+    logger.debug(f"something to outputs, {some_variable}")
+    logger.info(f"something to outputs, {some_variable}")
+    logger.warning(f"something to outputs, {some_variable}")
+    logger.error(f"something to outputs, {some_variable}")
+    logger.critical(f"something to outputs, {some_variable}")
+
+The default logging level is ``logging.INFO``, you can change it by setting the value of ``common_kwargs.logger_args.level`` in the config file.
+
+
+Usages of Weights & Biases
+======================================
+`Weights & Biases <https://wandb.ai/>`_ is a online *platform helps you streamline your ML workflow from end to end*.
+It could track your version automatically and visualize your training data uploaded from different devices.
+
+We've integrate its package ``wandb`` in dist-MARL and it can be activated by simply setting the value of ``common_kwargs.use_wandb`` to ``True``.
+
+.. TODO: instructions for wandb
+
+
+Usages of TensorBoard
+======================================

@@ -1,0 +1,451 @@
+.. _chap_env_design:
+
+===============================================================
+How to Integrate a Multi-agent Environment into dist-MARL
+===============================================================
+
+dist-MARL has supported several multi-agent environments, such as `SMAC <https://github.com/oxwhirl/smac>`_ , `Google Research Football <https://github.com/google-research/football>`_ and so on.
+
+Indeed, any multi-agent environment can be simply and rapidly integrated into this framework by wrapping it in a standard API.
+This chapter will show how to accomplish this.
+
+.. _chap_env_design-sec_apis:
+
+Standard API
+===============================================================
+We will start with a brief introduction of the basic API of the class ``MultiAgentEnvBase()`` in :file:`src/envs/ma_env_base.py` . (The full API docs of the module ``envs`` please refer to :ref:`envs API <api_docs-envs_module>` .)
+
+We design the API mainly following the style of `openai/gym <https://github.com/openai/gym>`_ , which is a classical *Python library for developing and comparing reinforcement learning algorithms by providing a standard API to communicate between learning algorithms and environments*.
+Besides, there are also some specially designed methods for multi-agent systems, e.g., ``getObs(), getObsAgent()``.
+
+
+.. _chap_env_design-sec_apis-subsec_standard_apis:
+
+Interacting with Environments
++++++++++++++++++++++++++++++++++++
+Environments can be interacted by similar interface to Gym.
+
+* *property* ``n_actions`` is the size of actions.
+  As for the discrete action space, the actions are transformed into one-hot vectors and it is exactly the total number of actions, while for the continuous action space, it is the dimension of the actions.
+* *property* ``n_agents`` is the number of the agents in this environment.
+* ``seed(seed: Optional[int] = None)`` is used for setting the random seed for the environment, and the random seed will be generated if the argument ``seed`` is not given.
+  Setting the random seed once the environment instance is created is highly recommended.
+* ``getSeed()`` is devised for obtaining the random seed used by the environment, could be useful for reproducing experiments.
+* ``reset()`` should be called every time the episode begins to reset the state of the environment.
+  Additionally, **it returns the initial observations and state** as well.
+* ``step(actions: Union[list, numpy.ndarray])`` takes and executes the actions (that can be a list or numpy.ndarray) from all agents in the environment, and it is the most often used method to interact with the environment every timestep.
+  It will return the ``observations, reward, terminated, info`` in a tuple. Note that ``observations``, the current visible observations of all agents, is a list of ``numpy.ndarray``.
+
+.. important:: 
+    Unlike single-agent case, the agents are only able to get their own observations due to the *Partially Observability* Assumption in multi-agent systems, but not the global state.
+    Therefore, the function ``step()`` only returns the observations of every agent.
+    The global state can be obtained by calling function ``getState()``.
+
+* ``close()`` , as the method name suggests, it should be called when the environment needs to be cleaned up.
+* ``render()`` is used for renderring the current state. It should be implemented specifically for every environment.
+
+Here is a simple example of interating with the environments, and we will introduce methods for multi-agent systems such as ``getState(), getAvailActions()`` in the next section:
+
+.. code-block:: python
+    :linenos:
+    :name: interacting_demo
+
+    # initialize the env instance
+    # this operation is usually taken in the function ``__init__()`` in :file:`src/distributed_framework/simulator/simulator_client.py`
+    env = env_fn(**env_kwargs)
+    # set random seed
+    env.seed(seed=env_seed)
+
+    ...
+
+    # the simplest demo of interacting
+    # this process is usually implemented in :file:`src/run_episode_loop.py`
+    observations = env.reset()
+    terminated = False
+    # get avail actions at the current state
+    avail_actions = env.getAvailActions()
+    # the episode loop
+    while not terminated:
+        state = env.getState()
+
+        # get actions by calling some methods
+        # here we use func ``generateRandomActions()`` to refer to a method generating random actions as an example of the joint policies
+        actions = generateRandomActions(state, observations, avail_actions)
+        observations, reward, terminated, info = env.step(actions)
+
+
+.. _chap_env_design-sec_apis-subsec_ma_apis:
+
+API for Multi-agent Systems
++++++++++++++++++++++++++++++++++++++++++++++
+
+Our API includes some methods to get detailed information about the multi-agent systems.
+The methods end with ``***Agent()`` always accept the ID of a specific agent as the argument ``agent_id`` and return the information of it.
+And the methods corresping to these methods but do not end with ``***Agent()`` always return all the information of agents in a list.
+
+* ``getAvailActions()`` is used to get available actions of all agents, as the line 14 in the :ref:`demo <interacting_demo>` shows.
+* ``getAvailActionsAgent(agent_id: int)`` is used for getting the available actions of the agent with the given ``agent_id``.
+* ``getEnvInfo()`` return the information about the environment in a ``dict``, which must contains ``state_size, obs_size, n_agents, n_actions, episode_limit, step_info`` at least.
+* ``getObs()`` returns the current observations of all agents in a list, you can always call it like ``observations = env.getObs()`` .
+* ``getObsAgent(agent_id: int)`` can be called to get the observation of the agent with the given ``agent_id``.
+* ``getState()`` is used for obtaining the current global state.
+* ``sampleActions()`` is used for generating random actions easily.
+
+Additional API could be implemented for specific environments as well.
+Again, for more information about environments already supported by dist-MARL, please refer to the :ref:`envs API <api_docs-envs_module>` .
+
+
+.. _chap_env_design-sec_integration:
+
+Integration of a New Environment
+===============================================================
+The most straightforward and fastest method for integration of a new environment is to wrap the original multi-agent environment with the *Standard API* mentioned above.
+In this section, we will use *Google Research Football (GRF)* as an example to show **how to integrate a multi-agent environment into dist-MARL**.
+
+The wrapper of *GRF* is in :file:`src/envs/env_wrappers/gfootball_wrapper.py` and you can also view :ref:`gfootball_wrapper API <api_docs-envs_module-subpackage_env_wrappers-gfootball>` for details.
+Though *GRF* is a typical environment with discrete action space, the flow for an environment with continuous action space (such as *Multi-agent Partical Environment* ) differs only in some details, which is explained in :ref:`chap_env_design-sec_integration-subsec_continuous_action_space`.
+
+.. _chap_env_design-sec_integration-subsec_inheritance:
+
+Inheritance of the Base Class
++++++++++++++++++++++++++++++++++++++++++++++
+First of all, make sure the dependencies for the new environment are all installed properly, and then import it as well as the base class ``MultiAgentEnvBase``.
+
+.. code-block:: python
+    :lineno-start: 5
+    :name: chap_env_design-sec_integration-subsec_inheritance-code_grf_1
+
+    ...
+    import gfootball.env as football_env
+
+    from envs import MultiAgentEnvBase
+
+
+    class GoogleFootballEnv(MultiAgentEnvBase):
+        """
+        The Google Research Football environment wrapper.
+        
+        Attributes:
+            env (gfootball.env.football_env.FootballEnv): The Google Research Football Environment instance.
+            episode_limit (int): The maximum steps of a single episode, and reaching it will lead to ``terminated=True``.
+            map_name (str): The name of the map.
+            _action_spaces (list[gym.spaces.Discrete]): action spaces of all agents, private.
+            _n_agents (int): The number of players controlled by the RL agents, private.
+            _obs (np.ndarray): The current observation, shape: [_n_agents, obs_size], private.
+            _observation_spaces (list[gym.spaces.Box]): observation spaces of all agents, private.
+            _seed (int): The random seed for the environment, private variable, private.
+            _time_step (int): The timestep, will be reset to 0 at the beginning of every episode, private.
+        """    
+        
+        def __init__(
+            self,
+            n_agents: Optional[int] = 3,
+            episode_limit: Optional[int] = 200,
+            map_name: Optional[str] = "academy_3_vs_1_with_keeper",
+            seed: Optional[int] = None,
+            **kwargs
+        ):
+            """
+            Initialize a GRF instance with ``map_name`` given.
+            
+            Args:
+                n_agents (int, optional): The number of players controlled by the RL agents, corresponding to arg ``number_of_left_players_agent_controls`` in the GRF environment class, defaults to 3.
+                episode_limit (int, optional): The maximum steps of a single episode, and reaching it will lead to ``terminated=True``, defaults to 200.
+                map_name (str, optional): The name of the environment map, defaults to "academy_3_vs_1_with_keeper".
+                seed (int, optional): The random seed, defaults to ``None`` and the environment will generate a random integer in [1e6, 1e7] as ``self._seed``.
+                **kwargs: keyword arguments for Google Research Football.
+            """
+            self.map_name = map_name
+            self._n_agents = n_agents
+            self.episode_limit = episode_limit
+            self._seed = seed if seed is not None else random.randint(1e6, 1e7)
+            
+            ...
+
+
+The attributes of the environment wrapper class could be diverse for different environments and you can always adjust them as needed, except that ``self.episode_limit`` and ``self._seed`` are **required for all environments**.
+The former aims to avoid the environment producing excessively long trajectories that yield greater challenge to the multi-agent reinforcement learning algorithms.
+And the latter, just in case, is used for reproducing the experimental results.
+
+Besides, ``self.map_name`` is recommended to manage many different maps in one environment, such as '2s3z' in *SMAC* and 'academy_3_vs_1_with_keeper' in *GRF*.
+
+With the basic attributes set, an instance of the environment should be created with the given parameters.
+Here, method ``football_env.create_environment()`` is provided by the original gfootball library, and you should call the similar function for your own environment.
+In this way, all methods could achieve their own purposes by calling functions of ``self.env``.
+
+.. code-block:: python
+    :lineno-start: 50
+    :name: chap_env_design-sec_integration-subsec_inheritance-code_grf_2
+            
+            # create the environment instance
+            self.env = football_env.create_environment(
+                env_name = self.map_name,
+                number_of_left_players_agent_controls=self._n_agents,
+                channel_dimensions=(football_env.observation_preprocessing.SMM_WIDTH, football_env.observation_preprocessing.SMM_HEIGHT),
+                **kwargs
+            )
+            # set the random seed
+            self.seed()
+            
+            # set the action space and observation space
+            self._action_spaces = [gym.spaces.Discrete(self.env.action_space.nvec[1]) for _ in range(self._n_agents)]
+            
+            obs_space_low = self.env.observation_space.low[0]
+            obs_space_high = self.env.observation_space.high[0]
+            self._observation_spaces = [gym.spaces.Box(low=obs_space_low, high=obs_space_high, dtype=self.env.observation_space.dtype) for _ in range(self._n_agents)]
+
+            # init other variables
+            self._obs = None
+            self._time_step = 0
+
+
+.. _chap_env_design-sec_integration-subsec_wrap:
+
+Wrapping with Standard API
++++++++++++++++++++++++++++++++++++++++++++++
+Here we will list some important methods of the wrapper class to show the style of wrapping.
+
+.. rubric:: Available Actions
+
+Available actions are useful in some environments to restrain the behaviour of agents avoiding illegal and unstable actions.
+As for these environments (such as *SMAC* ), you can call its original API to get available actions.
+However, for environments like *GRF*, all actions are available at anytime.
+Therefore, here we set vector of ones for each agent as their ``avail_actions`` .
+
+.. code-block:: python
+    :lineno-start: 136
+
+    def getAvailActions(self) -> List[np.ndarray]:
+        """
+        Obtain the available actions of all agents in a list. Note that all actions are available in GRF at anytime.
+
+        Returns:
+            list[np.ndarray]: **avail_actions**: A list of available actions for all agents.
+        """
+        return [np.ones(shape=self.n_actions, dtype=int) for agent_id in range(self.n_agents)]
+
+
+.. rubric:: Information about Environments
+
+Basic information about the environments would be important for creating policy or critic networks, and the information will be stored in ``env_info_dict`` for the program to read from it.
+The keys listed below must be included in every environment.
+
+.. code-block:: python
+    :lineno-start: 157
+
+    def getEnvInfo(self) -> Dict:
+        """
+        Obtain the environment information in a Dict.
+
+        Returns:
+            dict: **env_info_dict**: The environment information, which contains ``n_actions, n_agents, episode_limit, obs_size, state_size, step_info``.
+        """
+        env_info_dict = {
+            "state_size": int(self.getStateShape().prod()),
+            "obs_size": int(self.getObsShape().prod()),
+            "n_actions": self.n_actions,
+            "n_agents": self.n_agents,
+            "episode_limit": self.episode_limit,
+            "step_info": {'score_reward': 0}
+        }
+        
+        return env_info_dict
+
+
+.. rubric:: Observations and States
+
+The most important things for decisions are the current observations and state.
+The observations should be a list of ``numpy.ndarray``, which is the observation of a single agent.
+The state is the global information and it should be a ``numpy.ndarray``.
+As for the *GRF* environment, we update the attribute ``self._obs`` after every step taken, and using the observations from all agents as the current state.
+
+.. code-block:: python
+    :lineno-start: 175
+
+    def getObs(self) -> List[np.ndarray]:
+        """
+        Obtain all agents' observations in a list.
+
+        Returns:
+            list[np.ndarray]: **observations**: The list of observations for all agents.
+        """
+        return [self._obs[i].reshape(-1) for i in range(self.n_agents)]
+
+.. code-block:: python
+    :lineno-start: 207
+
+    def getState(self) -> np.ndarray:
+        """
+        Obtain the global state.
+
+        Returns:
+            np.ndarray: **state**: The global state for all agents.
+        """
+        return self._obs.flatten()
+
+
+.. rubric:: Restart a New Episode
+
+Remember to restore the variables to the original values every time you reset the environment to restart a new episode.
+
+.. code-block:: python
+    :lineno-start: 225
+
+    def reset(self) -> Tuple[List[np.ndarray], np.ndarray]:
+        """
+        Reset the state of the environment and return the initial observations.
+
+        Returns:
+            (list[np.ndarray], np.ndarray): **(observations, state)**: (The initial observations, The global state for all agents)
+        """
+        self._obs = self.env.reset()
+        self._time_step = 0
+        
+        return self.getObs(), self.getState()
+
+
+.. rubric:: The Interaction Method
+
+The new wrapped ``step()`` function could be implemented by calling the original method of the environment instance.
+Besides, the format of the returns must be carefully checked.
+As for *GRF*, we have devised another method ``self._checkTermination()`` to enable it with different termination conditions.
+
+.. code-block:: python
+    :lineno-start: 258
+
+    def step(self, actions: Union[np.ndarray, list]) -> Tuple[List[np.ndarray], Union[int, float], bool, Dict]:
+        """
+        Run one timestep of the environment's dynamics. When the end of episode is reached, you are responsible for
+        calling func ``reset()`` to reset this environment's state.
+
+        Accepts the actions and returns a tuple (observations, reward, terminated, info), where:
+
+        - **observations**: A list of agents' observations of the current state.
+        - **reward**: Amount of reward returned after previous actions.
+        - **terminated (a.k.a. done)**: Whether the episode has ended, in which case further ``step()`` calls will return undefined results.
+        - **info**: Contains auxiliary diagnostic information (helpful for debugging, and sometimes learning).
+
+        Args:
+            actions (np.ndarray or list): Actions taken by the agents.
+        
+        Returns:
+            (list[np.ndarray], float, bool, dict): **(observations, reward, terminated, info)**
+        """
+        self._time_step += 1
+        observations, rewards, terminated, info = self.env.step(list(actions))
+        
+        # update variables
+        sum_reward = sum(rewards)
+        terminated = terminated | self._checkTermination()
+        self._obs = observations
+
+        return self.getObs(), sum_reward, terminated, info
+
+
+.. _chap_env_design-sec_integration-subsec_continuous_action_space:
+
+Environments with Continuous Action Space
++++++++++++++++++++++++++++++++++++++++++++++
+Continuous action space is supported by dist-MARL as well except that some details need to be clarified.
+
+* ``n_actions`` means the dimensions of the action vectors.
+  Besides, if the agents are **heterogeneous** and have different dimensions of actions, ``gym.spaces.Box()`` is recommended to construct the property ``action_space``.
+  For exaple, where ``self.n_actions_list`` is the list of action dimensions for every agent:
+
+  .. code-block:: python
+
+      self._action_spaces = [
+          gym.spaces.Box(
+              low=[-numpy.inf] * self.n_actions_list[agent_id],
+              high=[numpy.inf] * self.n_actions_list[agent_id],
+              dtype=numpy.float32) for agent_id in range(self.n_agents)
+      ]
+
+* Similar to *GRF*, the all actions are more likely to be available at anytime.
+* The action selector is the last layer before the actions are chosen, and it should be in the continuous style. Please check :file:`src/common/action_selector.py` for details.
+
+
+.. _chap_env_design-sec_integration-subsec_include_in_envs:
+
+Register Your Environment in the Module
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Finally, don't forget to import your new environment into the module ``envs`` and register it like others, e.g.,
+
+.. code-block:: python
+    :caption: src/envs/__init__.py
+    :lineno-start: 29
+
+    env_register = {}
+
+
+    try:
+        gfootball_support = True
+        from .env_wrappers.gfootball_wrapper import GoogleFootballEnv
+        env_register['gfootball'] = partial(envRegister, env_fn=GoogleFootballEnv)
+    except:
+        gfootball_support = False
+
+
+
+.. _chap_env_design-sec_integration-subsec_test:
+
+Test Your Wrapped Environment
++++++++++++++++++++++++++++++++++++++++++++++
+We provide the unit test for integrated environments in :file:`test/test_envs.py` and testing your wrapped environment before directly using it is highly recommended.
+
+All you need to do is writing such a function to create an instance for the test method ``testEnvironmentAPI()``.
+Here we also use *GRF* as the example to show it.
+
+.. code-block:: python
+    :lineno-start: 30
+
+    def createGRFEnv(cfg: Optional[str] = 'grf_qmix',
+                     n_agents: Optional[int] = 3,
+                     map_name: Optional[str] = "academy_3_vs_1_with_keeper") -> envs.MultiAgentEnvBase:
+        """
+        Create an instance of GRF environment with ``map_name`` and assert the types of the properties.
+        
+        Args:
+            cfg (str, optional): The config name, defaults to ``grf_qmix``.
+            n_agents (int, optional): The number of the players controlled by agents, defaults to 3.
+            map_name (str, optional): The name of the map, defaults to "academy_3_vs_1_with_keeper".
+        
+        Returns:
+            envs.env_wrappers.GoogleFootballEnv: **env**: An instance of GRF environment with ``map_name``.
+        """
+        # get the env class and keyword arguments based on config ``cfg``
+        env_fn, env_kwargs = getEnvFnAndKwargs(cfg)
+        assert env_fn is not None
+        assert env_kwargs is not None
+        
+        # create env
+        env_kwargs.update({
+            'map_name': map_name,
+            'n_agents': n_agents
+            }
+        )
+        env = env_fn(**env_kwargs)
+
+        # assert properties
+        assert isinstance(env.n_actions, int)
+        assert isinstance(env.n_agents, int)
+        assert isinstance(env.action_spaces[0], gym.spaces.Discrete)
+        assert isinstance(env.observation_spaces[0], gym.spaces.Box)
+        
+        return env
+
+.. code-block:: python
+    :lineno-start: 30
+
+    if envs.gfootball_support:
+        import gym
+        
+        # test Google Research Football Environment
+        grf_env = createGRFEnv()
+        testEnvironmentAPI(grf_env)
+        print("------------------------------------------------------")
+        print("GRF environment has been test successfully!")
+        del grf_env
+
+
+Congradulations! Once the new integrated environment passes the unit test, it should be well compatible into dist-MARL.

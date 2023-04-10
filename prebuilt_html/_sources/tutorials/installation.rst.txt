@@ -1,0 +1,251 @@
+.. _chap_installation:
+
+=================================
+Installation Instructions
+=================================
+In order to install dist-MARL on your machine, several approaches are provided to easily finish the deployment.
+
+.. _chap_installation-sec_download_src_code:
+
+Download the Source Code of dist-MARL
+========================================================================
+
+Before you start, you have to download the source code with the submodules firstly.
+
+.. code-block:: bash
+
+    # clone the repository with the submodules from github
+    git clone --recursive -b dev git@github.com:thu-rllab/marl-dev.git
+
+
+.. rubric:: Deployment of dist-MARL
+
+* :ref:`chap_installation-sec_deploy_with_docker`
+* :ref:`chap_installation-sec_deploy_from_source_code`
+
+
+.. _chap_installation-sec_deploy_with_docker:
+
+Deploy dist-MARL with Docker
+========================================================================
+
+We provide a :file:`Dockerfile` to easily deploy dist-MARL with **docker**.
+
+Please build the basic docker image `ubuntu18.04-anaconda3/cuda-11.0` by referring to `vanilla-docker-image <https://github.com/Joy1112/vanilla-docker-images>`_.
+
+.. note:: 
+    SMAC relies on *StarCraftII* library.
+    Therefore, it's a good way to follow the instructions in :ref:`code_sc2_downloads` to install the dependencies in your host machine but not in the docker container.
+    In this way, the *StarCraftII* library could be mounted into the container and will not be deleted while the container is removed.
+
+
+Build the Docker Image from Source Code
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+A :file:`Makefile` is offerred to simplify your building process.
+Here are some instructions and examples of it.
+
+.. code-block:: bash
+
+    cd marl-dev
+    # Usage
+    make <command> [options]
+    # command:
+    #     build-smac: build a docker image with SMAC installed as the basic environment, the image will be named as ``marl-dev/dev:latest``.
+    #     build-all-envs: build a docker image with SMAC, GRF, PettingZoo[mpe] installed, the image will be named as ``marl-dev/dev:all-envs``.
+    #     build-sphinx: build a docker image with Sphinx installed for writing docs, the image will be named as ``marl-dev/sphinx:latest``.
+    #     
+    #         options: (for all ``command`` begun with ``build-***``)
+    #             docker_base: the base docker image to build the current docker image, defaults to "ubuntu18.04-anaconda3/cuda-11.0".
+    # 
+    # 
+    #     run-docker: create a docker container as the dist-MARL environment, automatically mapping
+    #         $HOME/.gitconfig, $HOME/.ssh, $HOME/StarCraftII, $(marl_path) into the docker container.
+    #         
+    #         options: 
+    #             image: the docker image to run a docker container, defaults to "marl-dev/dev:latest".
+    #             port: the port in the host mapped to the port 22 in the container for SSH service, defaults to 10022.
+    #                 (make sure the ``port`` is not used by other existing containers)
+    #             container_name: the name of the container to create, defaults to "marl-dev_exp".
+    #                 (make sure the ``container_name`` is not used by other existing containers)
+    #             marl_path: the path to the marl-dev project in your host machine, and it will be mouted as :file:`/home/docker/marl-local` in the container,
+    #                 defaults to ``$(HOME)/Projects/marl-dev. Note this is only a develop version feature.
+
+
+    # examples
+    # 1. build marl-dev basic docker image with smac
+    make build-smac
+
+    # 2. build marl-dev sphinx docker image for developing documentations and set the base docker image to "base/ubuntu20.04-anaconda3/cuda-11.0"
+    make build-sphinx docker_base="base/ubuntu20.04-anaconda3/cuda-11.0"
+
+    # 3. create a new docker container
+    # make sure you have ``StarCraftII`` installed or linked under your user home path
+    make run-docker image=marl-dev/dev:all-envs container_name=marl-dev_run-qmix port=10030 marl_path=$HOME/marl-dev
+
+Of course, you can also use the original docker commands.
+Here are some cheats for creating a docker contianer.
+
+.. code-block:: bash
+
+    cd marl-dev
+    # build docker image
+    # the bool values are the default values, you can change them if you want to install the dependencies.
+    docker build -t <image_name>:<tag> . \
+        --build-arg DOCKER_BASE=<docker_base> \
+        --build-arg gfootball="False" \
+        --build-arg mpe="False" \
+        --build-arg smac="True" \
+        --build-arg sphinx="False"
+    # e.g., build with the default values
+    docker build -t marl-dev/dev:latest .
+
+    # create a new docker container and mount files from the host
+    # ``-u`` option is used for mapping the user_ID from the host into the container
+    # ``-v`` option is used for mouting the files from the host into the container
+    docker run --name <container_name> \
+        -itd \
+        -u $(id -u):$(id -g) \
+        -v <path_to_StarCraftII>:/home/docker/StarCraftII:ro \
+        <image_name>:<tag>
+    # e.g.
+    docker run --name my_marl-dev \
+        -itd \
+        -u $(id -u):$(id -g) \
+        -v $HOME/StarCraftII:/home/docker/StarCraftII:ro \
+        marl-dev/dev:latest
+
+
+Launch the dist-MARL Docker Container
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The dist-MARL docker container could be created by executing the **make commands** ``make run-docker [options]`` or **docker commands** ``docker run [options]`` mentioned above.
+
+Once the docker container is started successfully, you can attach to it by:
+
+.. code-block:: bash
+    
+    # attach to the container
+    docker exec -it <container_name> /bin/bash
+
+
+.. _chap_installation-sec_deploy_from_source_code:
+
+Deploy dist-MARL from Source Code
+========================================================================
+
+You can deploy dist-MARL on Linux (Ubuntu >= 18.04 is recommended) directly as well.
+
+
+.. _chap_installation-sec_deploy_from_source_code-subsec_dependencies:
+
+Dependencies Installation
++++++++++++++++++++++++++++++++++++++++++
+
+`Anaconda3 <https://www.anaconda.com/>`_ is recommended to manage your environment.
+Please follow the instructions below to install dependencies:
+
+.. code-block:: bash
+
+    # create your own conda environment, here we install python==3.7.9 as an example.
+    cd marl-dev
+    conda create -n marl python==3.7.9
+    conda activate marl
+    pip install --no-cache-dir -r requirements.txt
+
+    # install Pytorch (version>=1.7 is recommended) which is appropriate for your cuda version.
+    # e.g.
+    conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch
+
+    # install other tool packages optionally
+    pip install matplotlib seaborn pygame pytest tqdm
+
+
+.. _chap_installation-sec_deploy_from_source_code-subsec_ma_envs_installation:
+
+Multi-agent Environments Installation
++++++++++++++++++++++++++++++++++++++++++
+
+To carry out the benchmark experiments, you have to install multi-agent environments on your host machine.
+We also list some instructions for installing StarCraft Multi-agent Challenge (SMAC), Google Research Football (GRF) and so on.
+
+
+* :ref:`chap_installation-sec_deploy_from_source_code-subsec_ma_envs_installation-subsubsec_install_smac`
+* :ref:`chap_installation-sec_deploy_from_source_code-subsec_ma_envs_installation-subsubsec_install_grf`
+* :ref:`chap_installation-sec_deploy_from_source_code-subsec_ma_envs_installation-subsubsec_install_mpe`
+
+
+.. _chap_installation-sec_deploy_from_source_code-subsec_ma_envs_installation-subsubsec_install_smac:
+
+Install SMAC
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+`StarCraft Multi-agent Challenge (SMAC) <https://github.com/oxwhirl/smac.git>`_ is one of the basic benchmarks for multi-agent algorithms.
+We have set the environment variable to load the StarCraftII library in :file:`src/envs/__init__.py`, thus you only need to create a symbolic link under your user home path ``$HOME``.
+
+
+.. code-block:: bash
+    :caption: StarCraftII Library Installation
+    :name: code_sc2_downloads
+
+    # download StarCraftII library to :file:`third_party/StarCraftII`
+    sh src/envs/starcraft_II/install_sc2.sh
+    # create a symbolic link under $HOME
+    ln -s -F third_party/StarCraftII ~/
+
+
+.. code-block:: bash
+
+    # install smac
+    pip install third_party/smac/
+
+
+.. _chap_installation-sec_deploy_from_source_code-subsec_ma_envs_installation-subsubsec_install_grf:
+
+Install Google Research Football
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+`Google Research Football (GRF) <https://github.com/google-research/football>`_ is a more complicated multi-agent environment compared to SMAC.
+The full installation guides please refer to its official website.
+Here we list the steps to install it in Ubuntu==18.04.
+
+.. code-block:: bash
+
+    # dependencies
+    sudo apt-get update --fix-missing
+    sudo apt-get --no-install-recommends install --fix-missing -yq cmake build-essential \
+    libgl1-mesa-dev libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-gfx-dev libboost-all-dev \
+    libdirectfb-dev libst-dev mesa-utils xvfb x11vnc
+
+    pip install setuptools psutil wheel
+
+    # install grf
+    pip install third_party/gfootball
+    # fix the version of package ``dm-tree`` to 0.1.7, otherwise unexpected bugs will occur
+    pip install dm-tree==0.1.7
+    # package ``pyvirtualdisplay`` is used for render the scenario in the server without a display, optionally
+    pip install pyvirtualdisplay
+
+
+.. _chap_installation-sec_deploy_from_source_code-subsec_ma_envs_installation-subsubsec_install_mpe:
+
+Install Multi-agent Particle Environment
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+`Multi-agent Particle Environment (MPE) <https://github.com/Farama-Foundation/PettingZoo>`_ is *a set of simple nongraphical communication tasks, originally from* `multiagent-particle-envs <https://github.com/openai/multiagent-particle-envs>`_.
+However, we recommend you install MPE from PettingZoo since the original code repository is archived and some unexpected bugs are not fixed nor listed.
+
+.. code-block:: bash
+
+    # we've test the compatibility of MPE (version=1.17.0) with other multi-agent environments
+    pip install pettingzoo[mpe]==1.17.0
+
+
+.. _chap_installation-sec_deploy_from_source_code-subsec_fix_packages:
+
+Fix Versions of Packages
++++++++++++++++++++++++++++++++++++
+
+After installing some of the environments above, it's important to make sure versions of the following packages are fixed:
+
+.. code-block:: bash
+
+    pip install numpy==1.21.6 gym==0.23.1 protobuf==3.20.1

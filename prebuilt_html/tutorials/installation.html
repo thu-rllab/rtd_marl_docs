@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation Instructions &mdash; Distributed Multi-agent Reinforcement Learning v0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/marl.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Logging Instructions" href="logging_instructions.html" />
+    <link rel="prev" title="Get Started" href="get_started.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Distributed Multi-agent Reinforcement Learning
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#download-the-source-code-of-dist-marl">Download the Source Code of dist-MARL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deploy-dist-marl-with-docker">Deploy dist-MARL with Docker</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-docker-image-from-source-code">Build the Docker Image from Source Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#launch-the-dist-marl-docker-container">Launch the dist-MARL Docker Container</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deploy-dist-marl-from-source-code">Deploy dist-MARL from Source Code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dependencies-installation">Dependencies Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-agent-environments-installation">Multi-agent Environments Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#install-smac">Install SMAC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#install-google-research-football">Install Google Research Football</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#install-multi-agent-particle-environment">Install Multi-agent Particle Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fix-versions-of-packages">Fix Versions of Packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logging_instructions.html">Logging Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment_design.html">How to Integrate a Multi-agent Environment into dist-MARL</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../develop_docs/develop_instructions.html">dist-MARL 开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop_docs/modify_rpc.html">dist-MARL 的分布式框架介绍</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../internal_docs/common/common_modules.html">Common</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/common/modules.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/envs/modules.html">envs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Distributed Multi-agent Reinforcement Learning</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation Instructions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-instructions">
+<span id="chap-installation"></span><h1>Installation Instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this heading">¶</a></h1>
+<p>In order to install dist-MARL on your machine, several approaches are provided to easily finish the deployment.</p>
+<section id="download-the-source-code-of-dist-marl">
+<span id="chap-installation-sec-download-src-code"></span><h2>Download the Source Code of dist-MARL<a class="headerlink" href="#download-the-source-code-of-dist-marl" title="Permalink to this heading">¶</a></h2>
+<p>Before you start, you have to download the source code with the submodules firstly.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># clone the repository with the submodules from github</span>
+git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>-b<span class="w"> </span>dev<span class="w"> </span>git@github.com:thu-rllab/marl-dev.git
+</pre></div>
+</div>
+<p class="rubric">Deployment of dist-MARL</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#chap-installation-sec-deploy-with-docker"><span class="std std-ref">Deploy dist-MARL with Docker</span></a></p></li>
+<li><p><a class="reference internal" href="#chap-installation-sec-deploy-from-source-code"><span class="std std-ref">Deploy dist-MARL from Source Code</span></a></p></li>
+</ul>
+</section>
+<section id="deploy-dist-marl-with-docker">
+<span id="chap-installation-sec-deploy-with-docker"></span><h2>Deploy dist-MARL with Docker<a class="headerlink" href="#deploy-dist-marl-with-docker" title="Permalink to this heading">¶</a></h2>
+<p>We provide a <code class="file docutils literal notranslate"><span class="pre">Dockerfile</span></code> to easily deploy dist-MARL with <strong>docker</strong>.</p>
+<p>Please build the basic docker image <cite>ubuntu18.04-anaconda3/cuda-11.0</cite> by referring to <a class="reference external" href="https://github.com/Joy1112/vanilla-docker-images">vanilla-docker-image</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SMAC relies on <em>StarCraftII</em> library.
+Therefore, it’s a good way to follow the instructions in <a class="reference internal" href="#code-sc2-downloads"><span class="std std-ref">StarCraftII Library Installation</span></a> to install the dependencies in your host machine but not in the docker container.
+In this way, the <em>StarCraftII</em> library could be mounted into the container and will not be deleted while the container is removed.</p>
+</div>
+<section id="build-the-docker-image-from-source-code">
+<h3>Build the Docker Image from Source Code<a class="headerlink" href="#build-the-docker-image-from-source-code" title="Permalink to this heading">¶</a></h3>
+<p>A <code class="file docutils literal notranslate"><span class="pre">Makefile</span></code> is offerred to simplify your building process.
+Here are some instructions and examples of it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>marl-dev
+<span class="c1"># Usage</span>
+make<span class="w"> </span>&lt;command&gt;<span class="w"> </span><span class="o">[</span>options<span class="o">]</span>
+<span class="c1"># command:</span>
+<span class="c1">#     build-smac: build a docker image with SMAC installed as the basic environment, the image will be named as ``marl-dev/dev:latest``.</span>
+<span class="c1">#     build-all-envs: build a docker image with SMAC, GRF, PettingZoo[mpe] installed, the image will be named as ``marl-dev/dev:all-envs``.</span>
+<span class="c1">#     build-sphinx: build a docker image with Sphinx installed for writing docs, the image will be named as ``marl-dev/sphinx:latest``.</span>
+<span class="c1">#</span>
+<span class="c1">#         options: (for all ``command`` begun with ``build-***``)</span>
+<span class="c1">#             docker_base: the base docker image to build the current docker image, defaults to &quot;ubuntu18.04-anaconda3/cuda-11.0&quot;.</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#     run-docker: create a docker container as the dist-MARL environment, automatically mapping</span>
+<span class="c1">#         $HOME/.gitconfig, $HOME/.ssh, $HOME/StarCraftII, $(marl_path) into the docker container.</span>
+<span class="c1">#</span>
+<span class="c1">#         options:</span>
+<span class="c1">#             image: the docker image to run a docker container, defaults to &quot;marl-dev/dev:latest&quot;.</span>
+<span class="c1">#             port: the port in the host mapped to the port 22 in the container for SSH service, defaults to 10022.</span>
+<span class="c1">#                 (make sure the ``port`` is not used by other existing containers)</span>
+<span class="c1">#             container_name: the name of the container to create, defaults to &quot;marl-dev_exp&quot;.</span>
+<span class="c1">#                 (make sure the ``container_name`` is not used by other existing containers)</span>
+<span class="c1">#             marl_path: the path to the marl-dev project in your host machine, and it will be mouted as :file:`/home/docker/marl-local` in the container,</span>
+<span class="c1">#                 defaults to ``$(HOME)/Projects/marl-dev. Note this is only a develop version feature.</span>
+
+
+<span class="c1"># examples</span>
+<span class="c1"># 1. build marl-dev basic docker image with smac</span>
+make<span class="w"> </span>build-smac
+
+<span class="c1"># 2. build marl-dev sphinx docker image for developing documentations and set the base docker image to &quot;base/ubuntu20.04-anaconda3/cuda-11.0&quot;</span>
+make<span class="w"> </span>build-sphinx<span class="w"> </span><span class="nv">docker_base</span><span class="o">=</span><span class="s2">&quot;base/ubuntu20.04-anaconda3/cuda-11.0&quot;</span>
+
+<span class="c1"># 3. create a new docker container</span>
+<span class="c1"># make sure you have ``StarCraftII`` installed or linked under your user home path</span>
+make<span class="w"> </span>run-docker<span class="w"> </span><span class="nv">image</span><span class="o">=</span>marl-dev/dev:all-envs<span class="w"> </span><span class="nv">container_name</span><span class="o">=</span>marl-dev_run-qmix<span class="w"> </span><span class="nv">port</span><span class="o">=</span><span class="m">10030</span><span class="w"> </span><span class="nv">marl_path</span><span class="o">=</span><span class="nv">$HOME</span>/marl-dev
+</pre></div>
+</div>
+<p>Of course, you can also use the original docker commands.
+Here are some cheats for creating a docker contianer.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>marl-dev
+<span class="c1"># build docker image</span>
+<span class="c1"># the bool values are the default values, you can change them if you want to install the dependencies.</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>&lt;image_name&gt;:&lt;tag&gt;<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--build-arg<span class="w"> </span><span class="nv">DOCKER_BASE</span><span class="o">=</span>&lt;docker_base&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--build-arg<span class="w"> </span><span class="nv">gfootball</span><span class="o">=</span><span class="s2">&quot;False&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--build-arg<span class="w"> </span><span class="nv">mpe</span><span class="o">=</span><span class="s2">&quot;False&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--build-arg<span class="w"> </span><span class="nv">smac</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--build-arg<span class="w"> </span><span class="nv">sphinx</span><span class="o">=</span><span class="s2">&quot;False&quot;</span>
+<span class="c1"># e.g., build with the default values</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>marl-dev/dev:latest<span class="w"> </span>.
+
+<span class="c1"># create a new docker container and mount files from the host</span>
+<span class="c1"># ``-u`` option is used for mapping the user_ID from the host into the container</span>
+<span class="c1"># ``-v`` option is used for mouting the files from the host into the container</span>
+docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>&lt;container_name&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-itd<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-u<span class="w"> </span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span>:<span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-v<span class="w"> </span>&lt;path_to_StarCraftII&gt;:/home/docker/StarCraftII:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>&lt;image_name&gt;:&lt;tag&gt;
+<span class="c1"># e.g.</span>
+docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>my_marl-dev<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-itd<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-u<span class="w"> </span><span class="k">$(</span>id<span class="w"> </span>-u<span class="k">)</span>:<span class="k">$(</span>id<span class="w"> </span>-g<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-v<span class="w"> </span><span class="nv">$HOME</span>/StarCraftII:/home/docker/StarCraftII:ro<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>marl-dev/dev:latest
+</pre></div>
+</div>
+</section>
+<section id="launch-the-dist-marl-docker-container">
+<h3>Launch the dist-MARL Docker Container<a class="headerlink" href="#launch-the-dist-marl-docker-container" title="Permalink to this heading">¶</a></h3>
+<p>The dist-MARL docker container could be created by executing the <strong>make commands</strong> <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">run-docker</span> <span class="pre">[options]</span></code> or <strong>docker commands</strong> <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">[options]</span></code> mentioned above.</p>
+<p>Once the docker container is started successfully, you can attach to it by:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># attach to the container</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;container_name&gt;<span class="w"> </span>/bin/bash
+</pre></div>
+</div>
+</section>
+</section>
+<section id="deploy-dist-marl-from-source-code">
+<span id="chap-installation-sec-deploy-from-source-code"></span><h2>Deploy dist-MARL from Source Code<a class="headerlink" href="#deploy-dist-marl-from-source-code" title="Permalink to this heading">¶</a></h2>
+<p>You can deploy dist-MARL on Linux (Ubuntu &gt;= 18.04 is recommended) directly as well.</p>
+<section id="dependencies-installation">
+<span id="chap-installation-sec-deploy-from-source-code-subsec-dependencies"></span><h3>Dependencies Installation<a class="headerlink" href="#dependencies-installation" title="Permalink to this heading">¶</a></h3>
+<p><a class="reference external" href="https://www.anaconda.com/">Anaconda3</a> is recommended to manage your environment.
+Please follow the instructions below to install dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create your own conda environment, here we install python==3.7.9 as an example.</span>
+<span class="nb">cd</span><span class="w"> </span>marl-dev
+conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>marl<span class="w"> </span><span class="nv">python</span><span class="o">==</span><span class="m">3</span>.7.9
+conda<span class="w"> </span>activate<span class="w"> </span>marl
+pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># install Pytorch (version&gt;=1.7 is recommended) which is appropriate for your cuda version.</span>
+<span class="c1"># e.g.</span>
+conda<span class="w"> </span>install<span class="w"> </span><span class="nv">pytorch</span><span class="o">==</span><span class="m">1</span>.7.1<span class="w"> </span><span class="nv">torchvision</span><span class="o">==</span><span class="m">0</span>.8.2<span class="w"> </span><span class="nv">torchaudio</span><span class="o">==</span><span class="m">0</span>.7.2<span class="w"> </span><span class="nv">cudatoolkit</span><span class="o">=</span><span class="m">11</span>.0<span class="w"> </span>-c<span class="w"> </span>pytorch
+
+<span class="c1"># install other tool packages optionally</span>
+pip<span class="w"> </span>install<span class="w"> </span>matplotlib<span class="w"> </span>seaborn<span class="w"> </span>pygame<span class="w"> </span>pytest<span class="w"> </span>tqdm
+</pre></div>
+</div>
+</section>
+<section id="multi-agent-environments-installation">
+<span id="chap-installation-sec-deploy-from-source-code-subsec-ma-envs-installation"></span><h3>Multi-agent Environments Installation<a class="headerlink" href="#multi-agent-environments-installation" title="Permalink to this heading">¶</a></h3>
+<p>To carry out the benchmark experiments, you have to install multi-agent environments on your host machine.
+We also list some instructions for installing StarCraft Multi-agent Challenge (SMAC), Google Research Football (GRF) and so on.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#chap-installation-sec-deploy-from-source-code-subsec-ma-envs-installation-subsubsec-install-smac"><span class="std std-ref">Install SMAC</span></a></p></li>
+<li><p><a class="reference internal" href="#chap-installation-sec-deploy-from-source-code-subsec-ma-envs-installation-subsubsec-install-grf"><span class="std std-ref">Install Google Research Football</span></a></p></li>
+<li><p><a class="reference internal" href="#chap-installation-sec-deploy-from-source-code-subsec-ma-envs-installation-subsubsec-install-mpe"><span class="std std-ref">Install Multi-agent Particle Environment</span></a></p></li>
+</ul>
+<section id="install-smac">
+<span id="chap-installation-sec-deploy-from-source-code-subsec-ma-envs-installation-subsubsec-install-smac"></span><h4>Install SMAC<a class="headerlink" href="#install-smac" title="Permalink to this heading">¶</a></h4>
+<p><a class="reference external" href="https://github.com/oxwhirl/smac.git">StarCraft Multi-agent Challenge (SMAC)</a> is one of the basic benchmarks for multi-agent algorithms.
+We have set the environment variable to load the StarCraftII library in <code class="file docutils literal notranslate"><span class="pre">src/envs/__init__.py</span></code>, thus you only need to create a symbolic link under your user home path <code class="docutils literal notranslate"><span class="pre">$HOME</span></code>.</p>
+<div class="literal-block-wrapper docutils container" id="code-sc2-downloads">
+<div class="code-block-caption"><span class="caption-text">StarCraftII Library Installation</span><a class="headerlink" href="#code-sc2-downloads" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># download StarCraftII library to :file:`third_party/StarCraftII`</span>
+sh<span class="w"> </span>src/envs/starcraft_II/install_sc2.sh
+<span class="c1"># create a symbolic link under $HOME</span>
+ln<span class="w"> </span>-s<span class="w"> </span>-F<span class="w"> </span>third_party/StarCraftII<span class="w"> </span>~/
+</pre></div>
+</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># install smac</span>
+pip<span class="w"> </span>install<span class="w"> </span>third_party/smac/
+</pre></div>
+</div>
+</section>
+<section id="install-google-research-football">
+<span id="chap-installation-sec-deploy-from-source-code-subsec-ma-envs-installation-subsubsec-install-grf"></span><h4>Install Google Research Football<a class="headerlink" href="#install-google-research-football" title="Permalink to this heading">¶</a></h4>
+<p><a class="reference external" href="https://github.com/google-research/football">Google Research Football (GRF)</a> is a more complicated multi-agent environment compared to SMAC.
+The full installation guides please refer to its official website.
+Here we list the steps to install it in Ubuntu==18.04.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># dependencies</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span>--fix-missing
+sudo<span class="w"> </span>apt-get<span class="w"> </span>--no-install-recommends<span class="w"> </span>install<span class="w"> </span>--fix-missing<span class="w"> </span>-yq<span class="w"> </span>cmake<span class="w"> </span>build-essential<span class="w"> </span><span class="se">\</span>
+libgl1-mesa-dev<span class="w"> </span>libsdl2-dev<span class="w"> </span>libsdl2-image-dev<span class="w"> </span>libsdl2-ttf-dev<span class="w"> </span>libsdl2-gfx-dev<span class="w"> </span>libboost-all-dev<span class="w"> </span><span class="se">\</span>
+libdirectfb-dev<span class="w"> </span>libst-dev<span class="w"> </span>mesa-utils<span class="w"> </span>xvfb<span class="w"> </span>x11vnc
+
+pip<span class="w"> </span>install<span class="w"> </span>setuptools<span class="w"> </span>psutil<span class="w"> </span>wheel
+
+<span class="c1"># install grf</span>
+pip<span class="w"> </span>install<span class="w"> </span>third_party/gfootball
+<span class="c1"># fix the version of package ``dm-tree`` to 0.1.7, otherwise unexpected bugs will occur</span>
+pip<span class="w"> </span>install<span class="w"> </span>dm-tree<span class="o">==</span><span class="m">0</span>.1.7
+<span class="c1"># package ``pyvirtualdisplay`` is used for render the scenario in the server without a display, optionally</span>
+pip<span class="w"> </span>install<span class="w"> </span>pyvirtualdisplay
+</pre></div>
+</div>
+</section>
+<section id="install-multi-agent-particle-environment">
+<span id="chap-installation-sec-deploy-from-source-code-subsec-ma-envs-installation-subsubsec-install-mpe"></span><h4>Install Multi-agent Particle Environment<a class="headerlink" href="#install-multi-agent-particle-environment" title="Permalink to this heading">¶</a></h4>
+<p><a class="reference external" href="https://github.com/Farama-Foundation/PettingZoo">Multi-agent Particle Environment (MPE)</a> is <em>a set of simple nongraphical communication tasks, originally from</em> <a class="reference external" href="https://github.com/openai/multiagent-particle-envs">multiagent-particle-envs</a>.
+However, we recommend you install MPE from PettingZoo since the original code repository is archived and some unexpected bugs are not fixed nor listed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># we&#39;ve test the compatibility of MPE (version=1.17.0) with other multi-agent environments</span>
+pip<span class="w"> </span>install<span class="w"> </span>pettingzoo<span class="o">[</span>mpe<span class="o">]==</span><span class="m">1</span>.17.0
+</pre></div>
+</div>
+</section>
+</section>
+<section id="fix-versions-of-packages">
+<span id="chap-installation-sec-deploy-from-source-code-subsec-fix-packages"></span><h3>Fix Versions of Packages<a class="headerlink" href="#fix-versions-of-packages" title="Permalink to this heading">¶</a></h3>
+<p>After installing some of the environments above, it’s important to make sure versions of the following packages are fixed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">numpy</span><span class="o">==</span><span class="m">1</span>.21.6<span class="w"> </span><span class="nv">gym</span><span class="o">==</span><span class="m">0</span>.23.1<span class="w"> </span><span class="nv">protobuf</span><span class="o">==</span><span class="m">3</span>.20.1
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="get_started.html" class="btn btn-neutral float-left" title="Get Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="logging_instructions.html" class="btn btn-neutral float-right" title="Logging Instructions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, thu-rllab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

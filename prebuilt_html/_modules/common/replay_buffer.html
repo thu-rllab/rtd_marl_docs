@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>common.replay_buffer &mdash; Distributed Multi-agent Reinforcement Learning v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/marl.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Distributed Multi-agent Reinforcement Learning
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/logging_instructions.html">Logging Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/environment_design.html">How to Integrate a Multi-agent Environment into dist-MARL</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/develop_instructions.html">dist-MARL 开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/modify_rpc.html">dist-MARL 的分布式框架介绍</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../internal_docs/common/common_modules.html">Common</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/common/modules.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/envs/modules.html">envs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Distributed Multi-agent Reinforcement Learning</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">common.replay_buffer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for common.replay_buffer</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">NoReturn</span>
+
+<span class="kn">from</span> <span class="nn">common</span> <span class="kn">import</span> <span class="n">Batch</span>
+
+
+<span class="kn">import</span> <span class="nn">time</span>
+
+<div class="viewcode-block" id="ReplayBufferBase"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.ReplayBufferBase">[docs]</a><span class="k">class</span> <span class="nc">ReplayBufferBase</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The Base class for the replay buffer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            buffer_size: int</span>
+<span class="sd">                The maximum size of the replay buffer.</span>
+<span class="sd">            device: str or int or torch.device, optional</span>
+<span class="sd">                The device to store the replay buffer, defaults to &#39;cpu&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReplayBufferBase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">=</span> <span class="n">buffer_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="ReplayBufferBase.canSample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.ReplayBufferBase.canSample">[docs]</a>    <span class="k">def</span> <span class="nf">canSample</span><span class="p">(</span><span class="bp">self</span><span class="p">,)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assert whether the data in the buffer is enough to be sampled.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            can_sample: bool</span>
+<span class="sd">                Whether the number of data is larger than the batch_size.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="ReplayBufferBase.insert"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.ReplayBufferBase.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Batch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert a batch data to the buffer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            batch: Batch</span>
+<span class="sd">                The data batch. (usually the episode data batch)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="ReplayBufferBase.sample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.ReplayBufferBase.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample the batch from the buffer according to the batch_size.</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            sampled_batch: Batch</span>
+<span class="sd">                The sampled mini-batch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+
+
+<div class="viewcode-block" id="SampleReplayBuffer"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.SampleReplayBuffer">[docs]</a><span class="k">class</span> <span class="nc">SampleReplayBuffer</span><span class="p">(</span><span class="n">ReplayBufferBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This replay buffer use Batch() as memory to store the samples, each element is one-step sample.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args:</span>
+<span class="sd">                buffer_size: int</span>
+<span class="sd">                    The maximum size of the replay buffer.</span>
+
+<span class="sd">            kwargs:</span>
+<span class="sd">                device: str or int or torch.device, optional</span>
+<span class="sd">                    The device to store the replay buffer, defaults to &#39;cpu&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SampleReplayBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span> <span class="o">=</span> <span class="n">Batch</span><span class="p">(</span><span class="n">init_type</span><span class="o">=</span><span class="s1">&#39;sample_data&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">size</span>
+
+<div class="viewcode-block" id="SampleReplayBuffer.canSample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.SampleReplayBuffer.canSample">[docs]</a>    <span class="k">def</span> <span class="nf">canSample</span><span class="p">(</span><span class="bp">self</span><span class="p">,)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span></div>
+
+<div class="viewcode-block" id="SampleReplayBuffer.insert"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.SampleReplayBuffer.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Batch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">isEmpty</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">createEmptyBatch</span><span class="p">(</span><span class="n">max_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">,</span> <span class="n">sample_data</span><span class="o">=</span><span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unsqueeze</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">+</span> <span class="n">batch</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">update_</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">+</span> <span class="n">batch</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">batch</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">+</span> <span class="n">batch</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">buffer_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">update_</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">+</span> <span class="n">buffer_left</span><span class="p">),</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">buffer_left</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span> <span class="o">+</span> <span class="n">batch</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">update_</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_insert_index</span><span class="p">),</span> <span class="n">batch</span><span class="p">[</span><span class="n">buffer_left</span><span class="p">:])</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;The number of the data in the buffer: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s2"> is more than the buffer_size: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+<div class="viewcode-block" id="SampleReplayBuffer.sample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.SampleReplayBuffer.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Batch</span><span class="p">:</span>
+        <span class="c1"># assert self.canSample(self.batch_size), f&quot;The number of data in the buffer: {self.size} is less than the batch_size: {batch_size}.&quot;</span>
+        
+        <span class="c1"># uniformly sample the data</span>
+        <span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">[</span><span class="n">idxs</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="TrajectoryReplayBuffer"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.TrajectoryReplayBuffer">[docs]</a><span class="k">class</span> <span class="nc">TrajectoryReplayBuffer</span><span class="p">(</span><span class="n">ReplayBufferBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This replay buffer use collections.deque as memory to store the trajectories, each element is a trajectory which is organized with Batch().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args:</span>
+<span class="sd">                buffer_size: int</span>
+<span class="sd">                    The maximum size of the replay buffer.</span>
+
+<span class="sd">            kwargs:</span>
+<span class="sd">                device: str or int or torch.device, optional</span>
+<span class="sd">                    The device to store the replay buffer, defaults to &#39;cpu&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TrajectoryReplayBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TrajectoryReplayBuffer.canSample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.TrajectoryReplayBuffer.canSample">[docs]</a>    <span class="k">def</span> <span class="nf">canSample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span></div>
+
+<div class="viewcode-block" id="TrajectoryReplayBuffer.insert"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.TrajectoryReplayBuffer.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Batch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TrajectoryReplayBuffer.sample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.TrajectoryReplayBuffer.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Batch</span><span class="p">]:</span>
+
+        <span class="c1"># assert self.canSample(), f&quot;The number of data in the buffer: {self.size} is less than the batch_size: {batch_size}.&quot;</span>
+
+        <span class="n">mini_batch</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="c1"># mini_batch = Batch.stack(mini_batch)</span>
+
+        <span class="k">return</span> <span class="n">mini_batch</span></div></div>
+    
+
+<div class="viewcode-block" id="DOPReplayBuffer"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.DOPReplayBuffer">[docs]</a><span class="k">class</span> <span class="nc">DOPReplayBuffer</span><span class="p">(</span><span class="n">ReplayBufferBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offbuffer_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span><span class="n">offbatch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This replay buffer use collections.deque as memory to store the trajectories, each element is a trajectory which is organized with Batch().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args:</span>
+<span class="sd">                buffer_size: int</span>
+<span class="sd">                    The maximum size of the replay buffer.</span>
+
+<span class="sd">            kwargs:</span>
+<span class="sd">                device: str or int or torch.device, optional</span>
+<span class="sd">                    The device to store the replay buffer, defaults to &#39;cpu&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DOPReplayBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offbuffer_size</span> <span class="o">=</span> <span class="n">offbuffer_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offbatch_size</span> <span class="o">=</span> <span class="n">offbatch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offbuffer</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offbuffer</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offbuffer</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DOPReplayBuffer.canSample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.DOPReplayBuffer.canSample">[docs]</a>    <span class="k">def</span> <span class="nf">canSample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offbatch_size</span></div>
+
+<div class="viewcode-block" id="DOPReplayBuffer.insert"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.DOPReplayBuffer.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">:</span> <span class="n">Batch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_offbuffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DOPReplayBuffer.sample"><a class="viewcode-back" href="../../api_docs/common/common.html#common.replay_buffer.DOPReplayBuffer.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Batch</span><span class="p">]:</span>
+
+        <span class="c1"># assert self.canSample(), f&quot;The number of data in the buffer: {self.size} is less than the batch_size: {batch_size}.&quot;</span>
+        <span class="n">onpolicy_data</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">offpolicy_data</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_offbuffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offbatch_size</span><span class="p">)</span>
+
+        <span class="n">time_1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Batch</span><span class="p">()</span>
+        
+        <span class="n">data</span><span class="o">.</span><span class="n">onpolicy_data</span> <span class="o">=</span> <span class="n">onpolicy_data</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">offpolicy_data</span> <span class="o">=</span> <span class="n">offpolicy_data</span>
+        <span class="n">time_2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Batch</span><span class="p">(</span><span class="n">onpolicy_data</span><span class="p">)</span>
+
+
+
+        <span class="k">return</span> <span class="n">data</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, thu-rllab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

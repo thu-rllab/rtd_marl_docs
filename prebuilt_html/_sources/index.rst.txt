@@ -1,0 +1,42 @@
+.. Distributed Multi-agent Reinforcement Learning documentation master file, created by
+   sphinx-quickstart on Mon Feb 13 12:29:45 2023.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to Distributed Multi-agent Reinforcement Learning's documentation!
+==========================================================================
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorials
+   :includehidden:
+   
+   tutorials/get_started
+   tutorials/installation
+   tutorials/logging_instructions
+   tutorials/environment_design
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Development Docs
+   :includehidden:
+
+   develop_docs/develop_instructions
+   develop_docs/modify_rpc
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Internal Documentation
+   :includehidden:
+
+   internal_docs/common/common_modules
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: API
+   :includehidden:
+
+   api_docs/common/modules
+   api_docs/envs/modules
+

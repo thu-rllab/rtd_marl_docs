@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dist-MARL 开发指南 &mdash; Distributed Multi-agent Reinforcement Learning v0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/marl.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dist-MARL 的分布式框架介绍" href="modify_rpc.html" />
+    <link rel="prev" title="How to Integrate a Multi-agent Environment into dist-MARL" href="../tutorials/environment_design.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Distributed Multi-agent Reinforcement Learning
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/logging_instructions.html">Logging Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/environment_design.html">How to Integrate a Multi-agent Environment into dist-MARL</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Docs</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">dist-MARL 开发指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#chap-develop-instructions-sec-project-structure">项目结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chap-develop-instructions-sec-coding-style">开发规范</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#chap-develop-instructions-sec-coding-style-subsec-naming-style">命名原则</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chap-develop-instructions-sec-coding-style-subsec-whitespaces">空格与水平留白</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chap-develop-instructions-sec-coding-style-subsec-comments-style">注释风格</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#git">Git 版本控制与协作</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chap-develop-instructions-sec-coding-style-subsec-docs-wrting">文档撰写</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modify_rpc.html">dist-MARL 的分布式框架介绍</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../internal_docs/common/common_modules.html">Common</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/common/modules.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/envs/modules.html">envs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Distributed Multi-agent Reinforcement Learning</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">dist-MARL 开发指南</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/develop_docs/develop_instructions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dist-marl">
+<span id="chap-develop-instructions"></span><h1>dist-MARL 开发指南<a class="headerlink" href="#dist-marl" title="Permalink to this heading">¶</a></h1>
+<p>本框架的通用开发管理链接包括：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://github.com/thu-rllab/marl-dev">Github Repository</a> : 源码</p></li>
+<li><p><a class="reference external" href="https://github.com/thu-rllab/marl-doc">Docs</a> : 文档</p></li>
+<li><p><a class="reference external" href="https://pingcode.com/">Project Management</a> : 项目协作工具及开发记录</p></li>
+</ul>
+</div></blockquote>
+<section id="chap-develop-instructions-sec-project-structure">
+<span id="id1"></span><h2>项目结构<a class="headerlink" href="#chap-develop-instructions-sec-project-structure" title="Permalink to this heading">¶</a></h2>
+<p>本项目的根目录下，<code class="file docutils literal notranslate"><span class="pre">docs</span></code> 中存放了本框架的文档，<code class="file docutils literal notranslate"><span class="pre">src</span></code> 目录中则为框架的源代码，<code class="file docutils literal notranslate"><span class="pre">test</span></code> 中存放了测试样例与测试代码，<code class="file docutils literal notranslate"><span class="pre">third_party</span></code> 中则为使用的第三方库 (SMAC, Pettingzoo 等源码库)。</p>
+<aside class="sidebar">
+<p class="sidebar-title">src/</p>
+<ul class="simple">
+<li><p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">agents</span></p></li>
+<li><p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">common</span></p></li>
+<li><p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">config</span></p></li>
+<li><p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">distributed_framework</span></p></li>
+<li><p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">envs</span></p></li>
+<li><p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">utils</span></p></li>
+<li><p><span class="sd-sphinx-override sd-badge sd-outline-dark sd-text-dark">main.py</span></p></li>
+<li><p><span class="sd-sphinx-override sd-badge sd-outline-dark sd-text-dark">run_episode_loop.py</span></p></li>
+</ul>
+</aside>
+<p>下面将对源代码部分进行简要介绍，具体目录如右侧所示。</p>
+<p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">agents</span> 目录中为与多智能体强化学习算法紧密相关的代码实现，其中所有的算法都需继承 <code class="docutils literal notranslate"><span class="pre">AgentBase(),</span> <span class="pre">LearnerBase()</span></code>，前者主要负责智能体的推理和动作的生成，即主要包括模型的前向过程，是智能体的策略网络所在的模块，而后者则负责模型的训练迭代，即主要实现模型的反向过程，是算法的 Loss 函数实现所在的模块。
+算法根据各自的类别 (Value based, Actor-Critic based, Policy based 等) 各自存放于不同目录中，且每个算法单独存放于以算法名命名的文件夹内（如 QMix 算法的目录：<code class="file docutils literal notranslate"><span class="pre">src/agents/value_based/qmix/</span></code>，其中包含了 <code class="file docutils literal notranslate"><span class="pre">qmix_agent.py,</span> <span class="pre">qmix_learner.py,</span> <span class="pre">qmix_mixing_network.py</span></code> 三个与其算法紧密联系的代码实现)。</p>
+<p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">common</span> 目录中为与具体算法联系不太大但会被各算法所使用的代码实现，即为可以被各个算法所公用的模块。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">models</span></code> 中是使用 Pytorch 所实现的各个基础网络模型（如 MLP，RNN 等），均继承了 <code class="file docutils literal notranslate"><span class="pre">src/common/models/base_nn.py</span></code> 中所定义的基类 <code class="docutils literal notranslate"><span class="pre">NNBase()</span></code>。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">action_selector.py</span></code> 中实现了多智能体强化学习算法常用的探索策略 (如 <span class="math notranslate nohighlight">\(\epsilon\)</span>-greedy 策略等)，通常作用于智能体动作决策的最后一步，根据策略网络的输出、当前可执行动作及探索策略进而选取智能体最终的动作。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">batch.py</span></code> 中是本框架所推荐的基本数据结构 <code class="docutils literal notranslate"><span class="pre">Batch()</span></code>，其同时具有向量、字典等特性和方法，它被作为分布式模块之间传输的基本数据结构，具体的介绍和使用请参考说明 <a class="reference internal" href="../internal_docs/common/batch.html#chap-batch"><span class="std std-ref">Batch</span></a>，我们基于 <a class="reference external" href="https://github.com/thu-ml/tianshou">thu-ml/tianshou</a> 实现了该模块。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">replay_buffer.py</span></code> 中以 <code class="docutils literal notranslate"><span class="pre">Batch()</span></code> 为基础实现了通用的经验回放样本池，包括以样本为单位和以轨迹为单位两种类型，如需实现新的经验回放样本池可以继承基类 <code class="docutils literal notranslate"><span class="pre">ReplayBufferBase()</span></code>。</p></li>
+</ul>
+</div></blockquote>
+<p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">config</span> 目录中存放了各个参数文件，包括环境的参数( <code class="file docutils literal notranslate"><span class="pre">env_cgfs</span></code> )、算法的参数( <code class="file docutils literal notranslate"><span class="pre">default_cfgs.yaml,</span> <span class="pre">exp_cfgs</span></code> )、分布式框架通信的 IP 组( <code class="file docutils literal notranslate"><span class="pre">servers_ip_groups</span></code> )等。
+其中 <code class="file docutils literal notranslate"><span class="pre">default_cfgs.yaml</span></code> 中定义了算法用到的最基本的参数，主程序将首先读取该默认参数而后根据给定的算法参数对其进行更新。</p>
+<p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">distributed_framework</span> 目录中为分布式框架的代码实现，主要涉及各模块间的通信及数据基本处理流程，具体请参考章节 <a class="reference internal" href="modify_rpc.html#chap-modify-rpc"><span class="std std-ref">dist-MARL 的分布式框架介绍</span></a>。</p>
+<p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">envs</span> 目录中是对多智能体环境的封装，主要实现了各环境的 API 接口统一，同时提供了相应环境依赖安装的脚本。</p>
+<p><span class="sd-sphinx-override sd-badge sd-bg-warning sd-bg-text-warning">utils</span> 目录中提供了一些脚本工具，如 <code class="docutils literal notranslate"><span class="pre">logger</span></code> 的创建等。</p>
+<p><span class="sd-sphinx-override sd-badge sd-outline-dark sd-text-dark">main.py</span> 是本框架的主程序统一入口，通过参数 <code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">&lt;module&gt;</span></code> 指定不同的分布式模块，即可运行起本框架并进行实验。</p>
+<p><span class="sd-sphinx-override sd-badge sd-outline-dark sd-text-dark">run_episode_loop.py</span> 中定义了与环境交互一整个 episode 的基础逻辑，若算法对交互逻辑有特殊要求仅需参照函数 <code class="docutils literal notranslate"><span class="pre">runEpisodeLoopBase()</span></code> 进行重写即可。</p>
+</section>
+<section id="chap-develop-instructions-sec-coding-style">
+<span id="id2"></span><h2>开发规范<a class="headerlink" href="#chap-develop-instructions-sec-coding-style" title="Permalink to this heading">¶</a></h2>
+<p>本节将对框架的文件及变量命名原则、注释风格和 Git 提交原则进行介绍。
+dist-MARL 框架的算法及模型主要基于 Python3 及 Pytorch (&gt;=1.7.0) 进行开发设计，而分布式模块的实现则使用了 <em>gRPC</em> 及 <em>Protobuf3</em> 。
+因此本框架的代码风格整体遵循 Python3 的开发规范。</p>
+<section id="chap-develop-instructions-sec-coding-style-subsec-naming-style">
+<span id="id3"></span><h3>命名原则<a class="headerlink" href="#chap-develop-instructions-sec-coding-style-subsec-naming-style" title="Permalink to this heading">¶</a></h3>
+<p>对于命名，遵循的基本原则是 <strong>应尽可能反应其用途或含义</strong>，一般情况下推荐使用完整的英文进行命名，例如 <code class="docutils literal notranslate"><span class="pre">replay_buffer.py</span></code>, <code class="docutils literal notranslate"><span class="pre">QMixMixingNetwork()</span></code> 等。
+极端情况下完整的英文命名可能过长，此时应使用缩写，同时使用缩写时 <strong>应尽可能避免造成误解</strong>，例如 <code class="docutils literal notranslate"><span class="pre">configurations</span></code> 可以缩写为 <code class="docutils literal notranslate"><span class="pre">configs,</span> <span class="pre">cfgs</span></code> 等，但是直接使用 <code class="docutils literal notranslate"><span class="pre">c,</span> <span class="pre">con</span></code> 等含义不明确的名称是不被允许的。关于缩写的选择可以参照常用变量命名，可以参考 <a class="reference external" href="https://unbug.github.io/codelf/">CODELF</a> 、 <a class="reference external" href="https://www.abbreviations.com/">Abbreviations</a> 等网站。</p>
+<p class="rubric">文件的命名</p>
+<p>文件的命名采用 <em>下划线命名法</em> ，即名称中的每一个逻辑断点使用下划线进行分割，例如 <code class="docutils literal notranslate"><span class="pre">data_type,</span> <span class="pre">replay_buffer_servicer.py</span></code> 等。
+不推荐在同一文件中实现过多的功能不同的模块，如有此需求，应根据实现层次、功能区分将其分割为不同的文件并以相应的概括性描述进行命名。</p>
+<p class="rubric">类的命名</p>
+<p>类的命名采用 <em>大驼峰命名法</em> ，即大写每个单词的首字母，例如 <code class="docutils literal notranslate"><span class="pre">ServerBase(),</span> <span class="pre">ReplayBufferServicer()</span></code> 等，其中基类以 <code class="docutils literal notranslate"><span class="pre">***Base()</span></code> 进行结尾。</p>
+<p class="rubric">函数的命名</p>
+<p>函数的命名采用 <em>小驼峰命名法</em> ，便于其和类、变量进行区分，即第一个单词的首字母小写，后面其他单词首字母大写，例如 <code class="docutils literal notranslate"><span class="pre">runEpisodeLoopBase(),</span> <span class="pre">start(),</span> <span class="pre">bulildInputs()</span></code> 等。
+虽然许多使用 Python 的库同样使用下划线命名法为函数命名，但是本框架推荐将函数对象本身作为参数传入其他方法，使用小驼峰命名法便于识别该传入参数是函数而非普通变量。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在分布式模块的服务端代码中，会出现遵循 <em>大驼峰命名法</em> 的函数，例如函数 <code class="docutils literal notranslate"><span class="pre">ActorServicer.InitCall()</span></code> ，这是由 Protobuf3 本身要求的语法，即 RPC 方法必须首字母大写，具体可见说明 <a class="reference internal" href="modify_rpc.html#chap-modify-rpc-sec-distributed-framework-intro-subsec-protos"><span class="std std-ref">protos</span></a> 。</p>
+</div>
+<p class="rubric">变量的命名</p>
+<p>变量的命名采用 <em>下划线命名法</em> ，例如 <code class="docutils literal notranslate"><span class="pre">actions,</span> <span class="pre">avail_actions</span></code> 等。
+同时，针对特殊的变量类型如字典、 <em>Protobuf3</em> 格式、线程锁等，推荐在名称结尾加上相应的类型缩写便于理解区分，例如 <code class="docutils literal notranslate"><span class="pre">batch_actions_dict,</span> <span class="pre">data_batch_proto,</span> <span class="pre">free_pools_lock</span></code> 等。</p>
+</section>
+<section id="chap-develop-instructions-sec-coding-style-subsec-whitespaces">
+<span id="id4"></span><h3>空格与水平留白<a class="headerlink" href="#chap-develop-instructions-sec-coding-style-subsec-whitespaces" title="Permalink to this heading">¶</a></h3>
+<p>省略所有空格的代码或许精简，但是不利于阅读；而有的代码时而有换行，时而无换行，十分不统一。
+在此，对本框架的代码的水平留白原则给出一定范例。</p>
+<p>首先，本框架内所有 Python 代码的缩进使用 4 个空格，若您使用 vscode，请进入 <strong>设置</strong> <span class="menuselection">‣</span> <strong>编辑器</strong> <span class="menuselection">‣</span> <strong>制表符大小</strong> ( <strong>Settings</strong> <span class="menuselection">‣</span> <strong>Editor</strong> <span class="menuselection">‣</span> <strong>Tab size</strong> ) 将单个制表符设置为 <code class="docutils literal notranslate"><span class="pre">4</span></code> 。</p>
+<p>为了便于阅读，二元操作符左右需有 <strong>1 个</strong> 空格：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">t_step</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">loss</span> <span class="o">=</span> <span class="o">-</span> <span class="p">((</span><span class="n">advantages</span> <span class="o">*</span> <span class="n">log_pi_taken</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>顶级定义间（类与类、函数与函数间）使用 <strong>2 行</strong> 留白空格进行分隔，而类内函数则使用 <strong>1 行</strong> 留白空格分隔：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">def</span> <span class="nf">funcOne</span><span class="p">(</span><span class="n">arg_1</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="linenos"> 2</span>    <span class="k">return</span> <span class="n">arg_1</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">def</span> <span class="nf">funcTwo</span><span class="p">(</span><span class="n">arg_2</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="linenos"> 6</span>    <span class="k">return</span> <span class="n">arg_2</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="k">class</span> <span class="nc">ClsOne</span><span class="p">:</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">arg_3</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="linenos">12</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arg_3</span> <span class="o">=</span> <span class="n">arg_3</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>    <span class="k">def</span> <span class="nf">clsOneFuncOne</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_4</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="linenos">15</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg_3</span> <span class="o">+</span> <span class="n">arg_4</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="k">class</span> <span class="nc">ClsTwo</span><span class="p">:</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">arg_5</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arg_5</span> <span class="o">=</span> <span class="n">arg_5</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span>    <span class="k">def</span> <span class="nf">clsTwoFuncOne</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_6</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="linenos">24</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg_5</span> <span class="o">*</span> <span class="n">arg_6</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="k">def</span> <span class="nf">funcThree</span><span class="p">(</span><span class="n">arg_7</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="linenos">28</span>    <span class="k">return</span> <span class="n">arg_7</span> <span class="o">+</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>函数传入参数较多时，可通过换行的方法改进代码阅读体验。
+当参数不是太多时，直接对齐参数即可，反括号与最后一个参数同一行；当参数过多时，正括号与函数保持同一行，变量的传入另起一行并添加 1 个缩进，反括号保持与函数本体同样的缩进：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># multiple arguments</span>
+<span class="linenos"> 2</span><span class="n">func</span><span class="p">(</span><span class="n">arg_1</span><span class="p">,</span>
+<span class="linenos"> 3</span>     <span class="n">arg_2</span><span class="p">,</span>
+<span class="linenos"> 4</span>     <span class="n">arg_3</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># or too many arguments</span>
+<span class="linenos"> 7</span><span class="n">func</span><span class="p">(</span>
+<span class="linenos"> 8</span>    <span class="n">arg_1</span><span class="p">,</span>
+<span class="linenos"> 9</span>    <span class="o">...</span><span class="p">,</span>
+<span class="linenos">10</span>    <span class="n">arg_N</span>
+<span class="linenos">11</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在逻辑层面具有连续功能的代码块，在前后各设置 <strong>1 行</strong> 留白空格，内部不加留白空格行：</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Blank Line - Example 1</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># some other codes</span>
+<span class="linenos"> 2</span><span class="o">...</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="c1"># blank line before the ``for-loop``</span>
+<span class="linenos"> 5</span><span class="c1"># the initialization of the var ``j`` is closely linked to the ``for-loop`` logic, no blank line</span>
+<span class="linenos"> 6</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 7</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="linenos"> 8</span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>    <span class="c1"># blank line before ``if``</span>
+<span class="linenos">11</span>    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+<span class="linenos">12</span>        <span class="n">j</span> <span class="o">=</span> <span class="n">i</span>
+<span class="linenos">13</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;asign ``j`` with ``i``!&quot;</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+<span class="linenos">16</span>        <span class="k">break</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1"># blank line after the ``for-loop``</span>
+<span class="linenos">19</span><span class="nb">print</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">Blank Line - Example 2</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">Cls</span><span class="p">(</span><span class="n">ClsBase</span><span class="p">):</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="n">arg_1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arg_2</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="linenos"> 4</span>        <span class="c1"># assign in-class variables by incoming arguments</span>
+<span class="linenos"> 5</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arg_1</span> <span class="o">=</span> <span class="n">arg_1</span>
+<span class="linenos"> 6</span>        <span class="bp">self</span><span class="o">.</span><span class="n">arg_2</span> <span class="o">=</span> <span class="n">arg_2</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>        <span class="c1"># blank line after the &#39;assigning block&#39;</span>
+<span class="linenos"> 9</span>        <span class="c1"># initialize some variables</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos">12</span>        <span class="bp">self</span><span class="o">.</span><span class="n">some_var</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>        <span class="c1"># blank line after the &#39;initializing block&#39;</span>
+<span class="linenos">15</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_func</span><span class="p">()</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>    <span class="k">def</span> <span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="linenos">18</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Now in self._func()&#39;</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>        <span class="c1"># blank line before the ``while-loop``</span>
+<span class="linenos">21</span>        <span class="n">max_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg_1</span>
+<span class="linenos">22</span>        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">23</span>        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">max_num</span><span class="p">:</span>
+<span class="linenos">24</span>            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>        <span class="c1"># blank line after the ``while-loop``</span>
+<span class="linenos">27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">some_var</span> <span class="o">=</span> <span class="n">i</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span>        <span class="c1"># blank line before ``return``</span>
+<span class="linenos">30</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">some_var</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="chap-develop-instructions-sec-coding-style-subsec-comments-style">
+<span id="id5"></span><h3>注释风格<a class="headerlink" href="#chap-develop-instructions-sec-coding-style-subsec-comments-style" title="Permalink to this heading">¶</a></h3>
+<p>首先请注意，所有的代码注释中不允许使用中文以避免造成一些环境下文件格式的编码混乱。
+本框架开发的整体注释风格主要参考了 <a class="reference external" href="https://google.github.io/styleguide/pyguide.html#s3.8-comments-and-docstrings">Google Python Style</a> 。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>针对函数和类的注释使用文档字符串，即使用 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span></code> 开始与结束，在其内部说明函数或类的功能，输入参数，返回值或返回迭代器的信息，以及与接口有关的异常情况。与 <em>Google Python Style</em> 略有不同的是，我们鼓励将函数功能的总结置于注释开始的 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;&quot;</span></code> 的下一行便于阅读，具体可见下方给出的例子。对于注释内涉及到的变量、函数、类和路径，使用两对 <em>上点号</em> 进行标注，如 <code class="docutils literal notranslate"><span class="pre">``var``</span></code> 。同时，可以通过 <code class="docutils literal notranslate"><span class="pre">Note:</span></code> 添加注意事项或 <code class="docutils literal notranslate"><span class="pre">e.g.:</span></code> 添加示例等。</p></li>
+<li><p>对部分代码逻辑进行解释性注释时，使用 <code class="docutils literal notranslate"><span class="pre">#</span></code> 在代码块的起始位置上方进行注释，或针对某行代码特别注释时可在该行代码右侧。而待完善的功能可在其上方标注 <code class="docutils literal notranslate"><span class="pre">#TODO：some</span> <span class="pre">work</span> <span class="pre">need</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">done</span></code> 避免遗忘。</p></li>
+</ul>
+</div></blockquote>
+<p>此外，对函数或类内方法进行定义时，应对每个参数的类型和函数的返回值类型进行标示（部分功能需导入 typing 模块），如 <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">func(arg:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">int:</span></code>，具体规则可参考 <a class="reference external" href="https://google.github.io/styleguide/pyguide.html#s2.21-type-annotated-code">Type Annotated Code</a> 和 <a class="reference external" href="https://peps.python.org/pep-0484/">PEP-484</a> 。</p>
+<p>下面给出简单的例子：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">funcOne</span><span class="p">(</span><span class="n">arg_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">arg_2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">arg_3</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add ``arg_1`` to ``arg_2`` only when ``arg_3`` is set to ``True``.</span>
+
+<span class="sd">    some detailed descriptions of this function.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        some notes about ``funcOne()``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arg_1 (float): some descriptions of arg_1.</span>
+<span class="sd">        arg_2 (int or numpy.ndarray): some descriptions of arg_2.</span>
+<span class="sd">        arg_3 (bool, optional): some descriptions of arg_3, defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray, int: **[return_var_1, return_var_2]**: some descriptions of the returns.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: An error occurred when the type of ``arg_1`` is not ``int``.</span>
+
+<span class="sd">    e.g.:</span>
+<span class="sd">        &gt;&gt;&gt; funcOne(0.1, 2)</span>
+<span class="sd">        numpy.array(2.1, dtype=numpy.float32), 1</span>
+<span class="sd">        &gt;&gt;&gt; funcOne(0.1, 2, arg_3=False)</span>
+<span class="sd">        numpy.array(2, dtype=numpy.float32), 0</span>
+<span class="sd">        &gt;&gt;&gt; funcOne(0.1, numpy.array([1, 2]))</span>
+<span class="sd">        numpy.array([1.1, 2.1], dtype=numpy.float32), 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg_1</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span>       <span class="c1"># assert the type of ``arg_1`` is ``int``</span>
+
+    <span class="c1"># some comments</span>
+    <span class="c1"># about the code block</span>
+    <span class="k">if</span> <span class="n">arg_3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arg_1</span> <span class="o">+</span> <span class="n">arg_2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arg_2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="mi">0</span>
+
+
+<span class="k">class</span> <span class="nc">ClientBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for clients.</span>
+
+<span class="sd">    Detailed description of this class.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        arg_1 (float): some descriptions of arg_1.</span>
+<span class="sd">        arg_2 (int): some descriptions of arg_2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the instance based on ``arg``.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            arg (float): some descriptions of arg.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg_1</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg_2</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform some operations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: some operations should be implemented</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<section id="git">
+<span id="chap-develop-instructions-sec-coding-style-subsec-git-usages"></span><h3>Git 版本控制与协作<a class="headerlink" href="#git" title="Permalink to this heading">¶</a></h3>
+<p>本框架的开发使用 Git 进行版本控制与协作开发。本项目中，各分支的主要功能及注意事项如下：</p>
+<blockquote>
+<div><ul>
+<li><p>主分支为 <code class="docutils literal notranslate"><span class="pre">main</span></code> 分支，仅在发布稳定版本或 pre 新版本时进行更新，向主分支的 merge 操作须经过至少两个主负责人的代码审查。</p></li>
+<li><p>开发分支为 <code class="docutils literal notranslate"><span class="pre">dev</span></code> 分支，向开发分支的 merge 操作，需先在功能的独立分支预先更新开发分支的最新代码，并测试功能的完好性后再合并。对每次提交需总结其主要内容，是查看 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span></code> 时必需的信息，每次提交中需添加相应 Type 标示，规范语法为 <code class="docutils literal notranslate"><span class="pre">&lt;type&gt;[(&lt;scope&gt;)]:</span> <span class="pre">&lt;short</span> <span class="pre">summary&gt;</span></code>， 如 <code class="docutils literal notranslate"><span class="pre">feat(models):</span> <span class="pre">add</span> <span class="pre">Transformer</span> <span class="pre">model.</span></code> , <code class="docutils literal notranslate"><span class="pre">feat(algo):</span> <span class="pre">add</span> <span class="pre">new</span> <span class="pre">algo</span> <span class="pre">'COMA'.</span></code> 。</p>
+<blockquote>
+<div><ul>
+<li><p>Type 表明了本次提交的主要类型，如新功能 (feat)、bug 修复 (fix) 等，Type 的具体类型可见 <a class="reference internal" href="#chap-develop-instructions-sec-coding-style-subsec-git-usages-table-git-commit-types"><span class="std std-ref">Type 类型表</span></a> 。</p></li>
+<li><p>Scope 是可选项，根据修改所影响的内容而定，常见类型包括 a) 模块名: <code class="docutils literal notranslate"><span class="pre">models,</span> <span class="pre">envs</span></code> 等； b) 所属分类: <code class="docutils literal notranslate"><span class="pre">algo,</span> <span class="pre">example</span></code> 等。</p></li>
+<li><p>Short summary 是对本次提交的简短描述，要求如下：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>不超过 50 个字符；</p></li>
+<li><p>动词开头，使用第一人称现在时，比如 change 而不是 changes 或 changed；</p></li>
+<li><p>每句话的第一个字母小写；</p></li>
+<li><p>结尾添加句点 <code class="docutils literal notranslate"><span class="pre">.</span></code>；</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>测试分支为 <code class="docutils literal notranslate"><span class="pre">test</span></code> 分支，应在每个功能开发完善后，在该分支下跟进相应的单元测试与测试案例。</p></li>
+<li><p>新功能的开发应基于当前最新 <code class="docutils literal notranslate"><span class="pre">dev</span></code> 分支，使用 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">&lt;branch_name&gt;</span></code> 新建新的功能独立分支，而后在新的独立分支下进行开发。当完成开发并向 <code class="docutils literal notranslate"><span class="pre">dev</span></code> 分支进行合并时，可以酌情考虑使用 <code class="docutils literal notranslate"><span class="pre">--squash</span></code> 进行变基。</p></li>
+</ul>
+</div></blockquote>
+<p class="rubric" id="chap-develop-instructions-sec-coding-style-subsec-git-usages-table-git-commit-types">Type 类型表</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>feat</p></td>
+<td><p>新功能，功能变更</p></td>
+</tr>
+<tr class="row-odd"><td><p>fix</p></td>
+<td><p>对 bug 的修复，在 <code class="docutils literal notranslate"><span class="pre">&lt;short</span> <span class="pre">summary&gt;</span></code> 中描述相应 bug</p></td>
+</tr>
+<tr class="row-even"><td><p>docs</p></td>
+<td><p>更新文档或 API 注释</p></td>
+</tr>
+<tr class="row-odd"><td><p>perf</p></td>
+<td><p>对项目或模块进行了性能或逻辑优化，不涉及显著的新功能和大的架构更改。
+例如影响实验结果的参数或将变量更改为更切合的新名字</p></td>
+</tr>
+<tr class="row-even"><td><p>refactor</p></td>
+<td><p>重构代码。代码结构的调整</p></td>
+</tr>
+<tr class="row-odd"><td><p>chore</p></td>
+<td><p>不涉及源码 (src)、文档 (docs) 和 测试 (test) 的其他改动。
+如一些注释修改和文件清理，修改了 <code class="file docutils literal notranslate"><span class="pre">.gitignore</span></code> 等。</p></td>
+</tr>
+<tr class="row-even"><td><p>style</p></td>
+<td><p>代码显示格式调整，如执行了 format 或更改了 tab 显示等，通常为了可读性和清晰美观</p></td>
+</tr>
+<tr class="row-odd"><td><p>test</p></td>
+<td><p>添加了单元测试等</p></td>
+</tr>
+<tr class="row-even"><td><p>build</p></td>
+<td><p>影响编译的更改，如添加了新的依赖等</p></td>
+</tr>
+<tr class="row-odd"><td><p>revert</p></td>
+<td><p>回滚版本</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="chap-develop-instructions-sec-coding-style-subsec-docs-wrting">
+<span id="id6"></span><h3>文档撰写<a class="headerlink" href="#chap-develop-instructions-sec-coding-style-subsec-docs-wrting" title="Permalink to this heading">¶</a></h3>
+<p>本框架的文档基于 ReStructuredText (RST) 进行撰写开发，具体的环境配置以及撰写可参照 <a class="reference external" href="https://pingcode.com/">PingCode</a> 内的文档记录和指引。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials/environment_design.html" class="btn btn-neutral float-left" title="How to Integrate a Multi-agent Environment into dist-MARL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modify_rpc.html" class="btn btn-neutral float-right" title="dist-MARL 的分布式框架介绍" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, thu-rllab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

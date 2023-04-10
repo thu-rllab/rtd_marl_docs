@@ -1,0 +1,50 @@
+=================================
+Get Started
+=================================
+
+**Welcome!**
+
+This guide gets you started with dist-MARL by showing you the basic usages of the modules with a simple working example.
+
+In this chapter, you will find step-by-step instructions on 
+
+* :ref:`chap_get_started-sec_prerequests_and_installation`
+* :ref:`chap_get_started-sec_overview`
+* :ref:`chap_get_started-sec_example`: *Carry Out Experiments with MARL algorithms and Environments in Minutes*
+
+
+.. _chap_get_started-sec_prerequests_and_installation:
+
+Prerequests and Installation
+=================================
+
+You could install dist-MARL on your machine like any other *Reinforcement Learning* projects.
+
+.. rubric:: Requirements for Deploying from Source Code
+
+* System: Linux (Ubuntu >= 18.04 is recommended) with Python 3.7+
+* Git
+* `Pytorch <https://pytorch.org/>`_ <2.0,>=1.7
+
+Additionally, we provide **Docker** for simply and swiftly deploying dist-MARL.
+This is the most suggested way for distributing your training procedure.
+In this way, you only need to make sure proper version of Docker is installed on your machine.
+
+.. rubric:: Requirements for Deploying with Docker
+
+* Docker
+* Nvidia-Docker-2.0 (for deploying your models on Nvidia GPU)
+
+The full installation instructions for dist-MARL is :ref:`here <chap_installation>`.
+
+
+.. _chap_get_started-sec_overview:
+
+An Overview of the Distributed Framework
+=================================================
+
+
+.. _chap_get_started-sec_example:
+
+A Hands-on Example
+=================================================

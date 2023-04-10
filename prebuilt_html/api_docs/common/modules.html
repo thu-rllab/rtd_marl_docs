@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>common &mdash; Distributed Multi-agent Reinforcement Learning v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/marl.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="common package" href="common.html" />
+    <link rel="prev" title="Batch" href="../../internal_docs/common/batch.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Distributed Multi-agent Reinforcement Learning
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/logging_instructions.html">Logging Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/environment_design.html">How to Integrate a Multi-agent Environment into dist-MARL</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/develop_instructions.html">dist-MARL 开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/modify_rpc.html">dist-MARL 的分布式框架介绍</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../internal_docs/common/common_modules.html">Common</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">common</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common.html">common package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../envs/modules.html">envs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Distributed Multi-agent Reinforcement Learning</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">common</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api_docs/common/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="common">
+<h1>common<a class="headerlink" href="#common" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="common.html">common package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="common.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="common.models.html">common.models package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.models.html#common.models.MLPBase"><code class="docutils literal notranslate"><span class="pre">MLPBase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.models.html#common.models.NNBase"><code class="docutils literal notranslate"><span class="pre">NNBase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.models.html#common.models.RNNBase"><code class="docutils literal notranslate"><span class="pre">RNNBase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.models.html#common.models.RNNPPO"><code class="docutils literal notranslate"><span class="pre">RNNPPO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.models.html#common.models.initNetParams"><code class="docutils literal notranslate"><span class="pre">initNetParams()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#module-common.action_selector">common.action_selector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.action_selector.ActionSelectorBase"><code class="docutils literal notranslate"><span class="pre">ActionSelectorBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.ActionSelectorBase.epsilon"><code class="docutils literal notranslate"><span class="pre">ActionSelectorBase.epsilon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.ActionSelectorBase.getType"><code class="docutils literal notranslate"><span class="pre">ActionSelectorBase.getType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.ActionSelectorBase.select_actions"><code class="docutils literal notranslate"><span class="pre">ActionSelectorBase.select_actions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.action_selector.EpsilonDecayBase"><code class="docutils literal notranslate"><span class="pre">EpsilonDecayBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.EpsilonDecayBase.getEpsilon"><code class="docutils literal notranslate"><span class="pre">EpsilonDecayBase.getEpsilon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.EpsilonDecayBase.getType"><code class="docutils literal notranslate"><span class="pre">EpsilonDecayBase.getType()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.action_selector.EpsilonGreedyActionSelector"><code class="docutils literal notranslate"><span class="pre">EpsilonGreedyActionSelector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.EpsilonGreedyActionSelector.select_actions"><code class="docutils literal notranslate"><span class="pre">EpsilonGreedyActionSelector.select_actions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.action_selector.ExpEpsilonDecay"><code class="docutils literal notranslate"><span class="pre">ExpEpsilonDecay</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.ExpEpsilonDecay.getEpsilon"><code class="docutils literal notranslate"><span class="pre">ExpEpsilonDecay.getEpsilon()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.action_selector.LinearEpsilonDecay"><code class="docutils literal notranslate"><span class="pre">LinearEpsilonDecay</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.LinearEpsilonDecay.getEpsilon"><code class="docutils literal notranslate"><span class="pre">LinearEpsilonDecay.getEpsilon()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.action_selector.MultinomialActionSelector"><code class="docutils literal notranslate"><span class="pre">MultinomialActionSelector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.action_selector.MultinomialActionSelector.select_actions"><code class="docutils literal notranslate"><span class="pre">MultinomialActionSelector.select_actions()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#module-common.batch">common.batch</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch.Batch"><code class="docutils literal notranslate"><span class="pre">Batch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__add__"><code class="docutils literal notranslate"><span class="pre">Batch.__add__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__contains__"><code class="docutils literal notranslate"><span class="pre">Batch.__contains__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__getitem__"><code class="docutils literal notranslate"><span class="pre">Batch.__getitem__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__iadd__"><code class="docutils literal notranslate"><span class="pre">Batch.__iadd__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__imul__"><code class="docutils literal notranslate"><span class="pre">Batch.__imul__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__itruediv__"><code class="docutils literal notranslate"><span class="pre">Batch.__itruediv__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__len__"><code class="docutils literal notranslate"><span class="pre">Batch.__len__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__mul__"><code class="docutils literal notranslate"><span class="pre">Batch.__mul__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__repr__"><code class="docutils literal notranslate"><span class="pre">Batch.__repr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__setattr__"><code class="docutils literal notranslate"><span class="pre">Batch.__setattr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__setitem__"><code class="docutils literal notranslate"><span class="pre">Batch.__setitem__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.__truediv__"><code class="docutils literal notranslate"><span class="pre">Batch.__truediv__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch._cat"><code class="docutils literal notranslate"><span class="pre">Batch._cat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch._getKeys"><code class="docutils literal notranslate"><span class="pre">Batch._getKeys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.append"><code class="docutils literal notranslate"><span class="pre">Batch.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.append_"><code class="docutils literal notranslate"><span class="pre">Batch.append_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.cat"><code class="docutils literal notranslate"><span class="pre">Batch.cat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.cat_"><code class="docutils literal notranslate"><span class="pre">Batch.cat_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.createEmptyBatch"><code class="docutils literal notranslate"><span class="pre">Batch.createEmptyBatch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.empty"><code class="docutils literal notranslate"><span class="pre">Batch.empty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.empty_"><code class="docutils literal notranslate"><span class="pre">Batch.empty_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.get"><code class="docutils literal notranslate"><span class="pre">Batch.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.isEmpty"><code class="docutils literal notranslate"><span class="pre">Batch.isEmpty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.items"><code class="docutils literal notranslate"><span class="pre">Batch.items()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.keys"><code class="docutils literal notranslate"><span class="pre">Batch.keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.pop"><code class="docutils literal notranslate"><span class="pre">Batch.pop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.shape"><code class="docutils literal notranslate"><span class="pre">Batch.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.size"><code class="docutils literal notranslate"><span class="pre">Batch.size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.split"><code class="docutils literal notranslate"><span class="pre">Batch.split()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.stack"><code class="docutils literal notranslate"><span class="pre">Batch.stack()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.stack_"><code class="docutils literal notranslate"><span class="pre">Batch.stack_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.to"><code class="docutils literal notranslate"><span class="pre">Batch.to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.to_numpy"><code class="docutils literal notranslate"><span class="pre">Batch.to_numpy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.to_torch"><code class="docutils literal notranslate"><span class="pre">Batch.to_torch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.update"><code class="docutils literal notranslate"><span class="pre">Batch.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.update_"><code class="docutils literal notranslate"><span class="pre">Batch.update_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.batch.Batch.values"><code class="docutils literal notranslate"><span class="pre">Batch.values()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch._assertKeysType"><code class="docutils literal notranslate"><span class="pre">_assertKeysType()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch._convertToArray"><code class="docutils literal notranslate"><span class="pre">_convertToArray()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch._createValue"><code class="docutils literal notranslate"><span class="pre">_createValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch._isBatchSet"><code class="docutils literal notranslate"><span class="pre">_isBatchSet()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch._isNumber"><code class="docutils literal notranslate"><span class="pre">_isNumber()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch._isScalar"><code class="docutils literal notranslate"><span class="pre">_isScalar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.batch._parseValue"><code class="docutils literal notranslate"><span class="pre">_parseValue()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#module-common.replay_buffer">common.replay_buffer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.replay_buffer.DOPReplayBuffer"><code class="docutils literal notranslate"><span class="pre">DOPReplayBuffer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.DOPReplayBuffer.canSample"><code class="docutils literal notranslate"><span class="pre">DOPReplayBuffer.canSample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.DOPReplayBuffer.insert"><code class="docutils literal notranslate"><span class="pre">DOPReplayBuffer.insert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.DOPReplayBuffer.sample"><code class="docutils literal notranslate"><span class="pre">DOPReplayBuffer.sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.DOPReplayBuffer.size"><code class="docutils literal notranslate"><span class="pre">DOPReplayBuffer.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.replay_buffer.ReplayBufferBase"><code class="docutils literal notranslate"><span class="pre">ReplayBufferBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.ReplayBufferBase.canSample"><code class="docutils literal notranslate"><span class="pre">ReplayBufferBase.canSample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.ReplayBufferBase.insert"><code class="docutils literal notranslate"><span class="pre">ReplayBufferBase.insert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.ReplayBufferBase.sample"><code class="docutils literal notranslate"><span class="pre">ReplayBufferBase.sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.ReplayBufferBase.size"><code class="docutils literal notranslate"><span class="pre">ReplayBufferBase.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.replay_buffer.SampleReplayBuffer"><code class="docutils literal notranslate"><span class="pre">SampleReplayBuffer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.SampleReplayBuffer.canSample"><code class="docutils literal notranslate"><span class="pre">SampleReplayBuffer.canSample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.SampleReplayBuffer.insert"><code class="docutils literal notranslate"><span class="pre">SampleReplayBuffer.insert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.SampleReplayBuffer.sample"><code class="docutils literal notranslate"><span class="pre">SampleReplayBuffer.sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.SampleReplayBuffer.size"><code class="docutils literal notranslate"><span class="pre">SampleReplayBuffer.size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="common.html#common.replay_buffer.TrajectoryReplayBuffer"><code class="docutils literal notranslate"><span class="pre">TrajectoryReplayBuffer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.TrajectoryReplayBuffer.canSample"><code class="docutils literal notranslate"><span class="pre">TrajectoryReplayBuffer.canSample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.TrajectoryReplayBuffer.insert"><code class="docutils literal notranslate"><span class="pre">TrajectoryReplayBuffer.insert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.TrajectoryReplayBuffer.sample"><code class="docutils literal notranslate"><span class="pre">TrajectoryReplayBuffer.sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="common.html#common.replay_buffer.TrajectoryReplayBuffer.size"><code class="docutils literal notranslate"><span class="pre">TrajectoryReplayBuffer.size</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../internal_docs/common/batch.html" class="btn btn-neutral float-left" title="Batch" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="common.html" class="btn btn-neutral float-right" title="common package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, thu-rllab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

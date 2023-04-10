@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>envs.ma_env_base &mdash; Distributed Multi-agent Reinforcement Learning v0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/marl.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Distributed Multi-agent Reinforcement Learning
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/logging_instructions.html">Logging Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/environment_design.html">How to Integrate a Multi-agent Environment into dist-MARL</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/develop_instructions.html">dist-MARL 开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop_docs/modify_rpc.html">dist-MARL 的分布式框架介绍</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../internal_docs/common/common_modules.html">Common</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/common/modules.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs/envs/modules.html">envs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Distributed Multi-agent Reinforcement Learning</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">envs.ma_env_base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for envs.ma_env_base</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">NoReturn</span>
+
+
+<div class="viewcode-block" id="MultiAgentEnvBase"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase">[docs]</a><span class="k">class</span> <span class="nc">MultiAgentEnvBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The base class for multi-agent environments.</span>
+
+<span class="sd">    .. attention::</span>
+<span class="sd">        All the methods in the base class are not callable.</span>
+
+<span class="sd">        The **Returns** just specifies the uniform return variable lists for all the interfaces.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        env (class): The multi-agent environment instance, e.g., SMAC environment and GRF environment.</span>
+<span class="sd">        episode_limit (int): The maximum steps of a single episode, and reaching it will lead to ``terminated=True``.</span>
+<span class="sd">        _seed (int): The random seed for the environment, private variable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the total number of actions an agent could ever take.</span>
+
+
+<span class="sd">        Note:</span>
+<span class="sd">            This is only suitable for the discrete 1-dimensional action space for each agent case.</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: **n_actions**: The total number of actions an agent can ever take.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the number of the agents in this environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: **n_agents**: The total number of the agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.close"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override close in your subclass to perform any necessary clean up operations.</span>
+
+<span class="sd">        Environments will automatically call this function themselves when garbage collected or when the program exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    
+<div class="viewcode-block" id="MultiAgentEnvBase.getAvailActions"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getAvailActions">[docs]</a>    <span class="k">def</span> <span class="nf">getAvailActions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the available actions of all agents in a list.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[np.ndarray] or list[list[int]]: **avail_actions**: A list of available actions for all agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.getAvailActionsAgent"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getAvailActionsAgent">[docs]</a>    <span class="k">def</span> <span class="nf">getAvailActionsAgent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the available actions for a specific agent given the agent_id.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            agent_id (int): The ID for the specific agent.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray or list[int]: **avail_agent_actions**: The actions that the agent with the given id can take at the current state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    
+<div class="viewcode-block" id="MultiAgentEnvBase.getEnvInfo"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getEnvInfo">[docs]</a>    <span class="k">def</span> <span class="nf">getEnvInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the environment information in a Dict.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: **env_info_dict**: The environment information, which must contains ``n_actions, n_agents, episode_limit, obs_size, state_size``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    
+<div class="viewcode-block" id="MultiAgentEnvBase.getObs"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getObs">[docs]</a>    <span class="k">def</span> <span class="nf">getObs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain all agents&#39; observations in a list.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[np.ndarray]: **observations**: The list of observations for all agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.getObsAgent"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getObsAgent">[docs]</a>    <span class="k">def</span> <span class="nf">getObsAgent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the observation for a specific agent given the agent_id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            agent_id (int): The ID for the specific agent.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: **observation**: The observation for the agent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.getObsShape"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getObsShape">[docs]</a>    <span class="k">def</span> <span class="nf">getObsShape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the shape of the observation.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple or np.ndarray: **obs_shape**: The shape of the observation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    
+<div class="viewcode-block" id="MultiAgentEnvBase.getSeed"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getSeed">[docs]</a>    <span class="k">def</span> <span class="nf">getSeed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the random seed used by this environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: **seed**: The random seed (usually a large integer) used by this environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.getState"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getState">[docs]</a>    <span class="k">def</span> <span class="nf">getState</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the global state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: **state**: The global state for all agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.getStateShape"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.getStateShape">[docs]</a>    <span class="k">def</span> <span class="nf">getStateShape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtain the shape of the state.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple or np.ndarray: **state_shape**: The shape of the state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    
+<div class="viewcode-block" id="MultiAgentEnvBase.render"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render the environment.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.reset"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the state of the environment and return the initial observations.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (list[np.ndarray], np.ndarray): **(observations, state)**: (The initial observations, The global state for all agents)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.sampleActions"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.sampleActions">[docs]</a>    <span class="k">def</span> <span class="nf">sampleActions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample random actions.</span>
+<span class="sd">        </span>
+<span class="sd">        Return:</span>
+<span class="sd">            list[int]: **random_actions**: The sampled random actions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+            
+<div class="viewcode-block" id="MultiAgentEnvBase.saveReplay"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.saveReplay">[docs]</a>    <span class="k">def</span> <span class="nf">saveReplay</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save a replay to the target output folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.seed"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the random seed for this environment instance. If ``seed==None``, then a random integer in [1e6, 1e7] will be used.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            seed (int, optional): The random seed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="MultiAgentEnvBase.step"><a class="viewcode-back" href="../../api_docs/envs/envs.html#envs.ma_env_base.MultiAgentEnvBase.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run one timestep of the environment&#39;s dynamics. When the end of episode is reached, you are responsible for</span>
+<span class="sd">        calling func ``reset()`` to reset this environment&#39;s state.</span>
+
+<span class="sd">        Accepts the actions and returns a tuple (observations, reward, terminated, info), where:</span>
+
+<span class="sd">        - **observations**: A list of agents&#39; observations of the current state.</span>
+<span class="sd">        - **reward**: Amount of reward returned after previous actions.</span>
+<span class="sd">        - **terminated (a.k.a. done)**: Whether the episode has ended, in which case further ``step()`` calls will return undefined results.</span>
+<span class="sd">        - **info**: Contains auxiliary diagnostic information (helpful for debugging, and sometimes learning).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            actions (np.ndarray): Actions taken by the agents.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (list[np.ndarray], float, bool, dict): **(observations, reward, terminated, info)**</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, thu-rllab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

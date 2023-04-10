@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Integrate a Multi-agent Environment into dist-MARL &mdash; Distributed Multi-agent Reinforcement Learning v0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/marl.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/design-tabs.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dist-MARL 开发指南" href="../develop_docs/develop_instructions.html" />
+    <link rel="prev" title="Logging Instructions" href="logging_instructions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Distributed Multi-agent Reinforcement Learning
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging_instructions.html">Logging Instructions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to Integrate a Multi-agent Environment into dist-MARL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#standard-api">Standard API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#interacting-with-environments">Interacting with Environments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-for-multi-agent-systems">API for Multi-agent Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#integration-of-a-new-environment">Integration of a New Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inheritance-of-the-base-class">Inheritance of the Base Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wrapping-with-standard-api">Wrapping with Standard API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environments-with-continuous-action-space">Environments with Continuous Action Space</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#register-your-environment-in-the-module">Register Your Environment in the Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-your-wrapped-environment">Test Your Wrapped Environment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../develop_docs/develop_instructions.html">dist-MARL 开发指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop_docs/modify_rpc.html">dist-MARL 的分布式框架介绍</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../internal_docs/common/common_modules.html">Common</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/common/modules.html">common</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_docs/envs/modules.html">envs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Distributed Multi-agent Reinforcement Learning</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How to Integrate a Multi-agent Environment into dist-MARL</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/environment_design.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-integrate-a-multi-agent-environment-into-dist-marl">
+<span id="chap-env-design"></span><h1>How to Integrate a Multi-agent Environment into dist-MARL<a class="headerlink" href="#how-to-integrate-a-multi-agent-environment-into-dist-marl" title="Permalink to this heading">¶</a></h1>
+<p>dist-MARL has supported several multi-agent environments, such as <a class="reference external" href="https://github.com/oxwhirl/smac">SMAC</a> , <a class="reference external" href="https://github.com/google-research/football">Google Research Football</a> and so on.</p>
+<p>Indeed, any multi-agent environment can be simply and rapidly integrated into this framework by wrapping it in a standard API.
+This chapter will show how to accomplish this.</p>
+<section id="standard-api">
+<span id="chap-env-design-sec-apis"></span><h2>Standard API<a class="headerlink" href="#standard-api" title="Permalink to this heading">¶</a></h2>
+<p>We will start with a brief introduction of the basic API of the class <code class="docutils literal notranslate"><span class="pre">MultiAgentEnvBase()</span></code> in <code class="file docutils literal notranslate"><span class="pre">src/envs/ma_env_base.py</span></code> . (The full API docs of the module <code class="docutils literal notranslate"><span class="pre">envs</span></code> please refer to <a class="reference internal" href="../api_docs/envs/modules.html#api-docs-envs-module"><span class="std std-ref">envs API</span></a> .)</p>
+<p>We design the API mainly following the style of <a class="reference external" href="https://github.com/openai/gym">openai/gym</a> , which is a classical <em>Python library for developing and comparing reinforcement learning algorithms by providing a standard API to communicate between learning algorithms and environments</em>.
+Besides, there are also some specially designed methods for multi-agent systems, e.g., <code class="docutils literal notranslate"><span class="pre">getObs(),</span> <span class="pre">getObsAgent()</span></code>.</p>
+<section id="interacting-with-environments">
+<span id="chap-env-design-sec-apis-subsec-standard-apis"></span><h3>Interacting with Environments<a class="headerlink" href="#interacting-with-environments" title="Permalink to this heading">¶</a></h3>
+<p>Environments can be interacted by similar interface to Gym.</p>
+<ul class="simple">
+<li><p><em>property</em> <code class="docutils literal notranslate"><span class="pre">n_actions</span></code> is the size of actions.
+As for the discrete action space, the actions are transformed into one-hot vectors and it is exactly the total number of actions, while for the continuous action space, it is the dimension of the actions.</p></li>
+<li><p><em>property</em> <code class="docutils literal notranslate"><span class="pre">n_agents</span></code> is the number of the agents in this environment.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seed(seed:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None)</span></code> is used for setting the random seed for the environment, and the random seed will be generated if the argument <code class="docutils literal notranslate"><span class="pre">seed</span></code> is not given.
+Setting the random seed once the environment instance is created is highly recommended.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getSeed()</span></code> is devised for obtaining the random seed used by the environment, could be useful for reproducing experiments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset()</span></code> should be called every time the episode begins to reset the state of the environment.
+Additionally, <strong>it returns the initial observations and state</strong> as well.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">step(actions:</span> <span class="pre">Union[list,</span> <span class="pre">numpy.ndarray])</span></code> takes and executes the actions (that can be a list or numpy.ndarray) from all agents in the environment, and it is the most often used method to interact with the environment every timestep.
+It will return the <code class="docutils literal notranslate"><span class="pre">observations,</span> <span class="pre">reward,</span> <span class="pre">terminated,</span> <span class="pre">info</span></code> in a tuple. Note that <code class="docutils literal notranslate"><span class="pre">observations</span></code>, the current visible observations of all agents, is a list of <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Unlike single-agent case, the agents are only able to get their own observations due to the <em>Partially Observability</em> Assumption in multi-agent systems, but not the global state.
+Therefore, the function <code class="docutils literal notranslate"><span class="pre">step()</span></code> only returns the observations of every agent.
+The global state can be obtained by calling function <code class="docutils literal notranslate"><span class="pre">getState()</span></code>.</p>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">close()</span></code> , as the method name suggests, it should be called when the environment needs to be cleaned up.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">render()</span></code> is used for renderring the current state. It should be implemented specifically for every environment.</p></li>
+</ul>
+<p>Here is a simple example of interating with the environments, and we will introduce methods for multi-agent systems such as <code class="docutils literal notranslate"><span class="pre">getState(),</span> <span class="pre">getAvailActions()</span></code> in the next section:</p>
+<div class="highlight-python notranslate" id="interacting-demo"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># initialize the env instance</span>
+<span class="linenos"> 2</span><span class="c1"># this operation is usually taken in the function ``__init__()`` in :file:`src/distributed_framework/simulator/simulator_client.py`</span>
+<span class="linenos"> 3</span><span class="n">env</span> <span class="o">=</span> <span class="n">env_fn</span><span class="p">(</span><span class="o">**</span><span class="n">env_kwargs</span><span class="p">)</span>
+<span class="linenos"> 4</span><span class="c1"># set random seed</span>
+<span class="linenos"> 5</span><span class="n">env</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">env_seed</span><span class="p">)</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="o">...</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1"># the simplest demo of interacting</span>
+<span class="linenos">10</span><span class="c1"># this process is usually implemented in :file:`src/run_episode_loop.py`</span>
+<span class="linenos">11</span><span class="n">observations</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="linenos">12</span><span class="n">terminated</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">13</span><span class="c1"># get avail actions at the current state</span>
+<span class="linenos">14</span><span class="n">avail_actions</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">getAvailActions</span><span class="p">()</span>
+<span class="linenos">15</span><span class="c1"># the episode loop</span>
+<span class="linenos">16</span><span class="k">while</span> <span class="ow">not</span> <span class="n">terminated</span><span class="p">:</span>
+<span class="linenos">17</span>    <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">getState</span><span class="p">()</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="c1"># get actions by calling some methods</span>
+<span class="linenos">20</span>    <span class="c1"># here we use func ``generateRandomActions()`` to refer to a method generating random actions as an example of the joint policies</span>
+<span class="linenos">21</span>    <span class="n">actions</span> <span class="o">=</span> <span class="n">generateRandomActions</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">observations</span><span class="p">,</span> <span class="n">avail_actions</span><span class="p">)</span>
+<span class="linenos">22</span>    <span class="n">observations</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="api-for-multi-agent-systems">
+<span id="chap-env-design-sec-apis-subsec-ma-apis"></span><h3>API for Multi-agent Systems<a class="headerlink" href="#api-for-multi-agent-systems" title="Permalink to this heading">¶</a></h3>
+<p>Our API includes some methods to get detailed information about the multi-agent systems.
+The methods end with <code class="docutils literal notranslate"><span class="pre">***Agent()</span></code> always accept the ID of a specific agent as the argument <code class="docutils literal notranslate"><span class="pre">agent_id</span></code> and return the information of it.
+And the methods corresping to these methods but do not end with <code class="docutils literal notranslate"><span class="pre">***Agent()</span></code> always return all the information of agents in a list.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">getAvailActions()</span></code> is used to get available actions of all agents, as the line 14 in the <a class="reference internal" href="#interacting-demo"><span class="std std-ref">demo</span></a> shows.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getAvailActionsAgent(agent_id:</span> <span class="pre">int)</span></code> is used for getting the available actions of the agent with the given <code class="docutils literal notranslate"><span class="pre">agent_id</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getEnvInfo()</span></code> return the information about the environment in a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, which must contains <code class="docutils literal notranslate"><span class="pre">state_size,</span> <span class="pre">obs_size,</span> <span class="pre">n_agents,</span> <span class="pre">n_actions,</span> <span class="pre">episode_limit,</span> <span class="pre">step_info</span></code> at least.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getObs()</span></code> returns the current observations of all agents in a list, you can always call it like <code class="docutils literal notranslate"><span class="pre">observations</span> <span class="pre">=</span> <span class="pre">env.getObs()</span></code> .</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getObsAgent(agent_id:</span> <span class="pre">int)</span></code> can be called to get the observation of the agent with the given <code class="docutils literal notranslate"><span class="pre">agent_id</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">getState()</span></code> is used for obtaining the current global state.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampleActions()</span></code> is used for generating random actions easily.</p></li>
+</ul>
+<p>Additional API could be implemented for specific environments as well.
+Again, for more information about environments already supported by dist-MARL, please refer to the <a class="reference internal" href="../api_docs/envs/modules.html#api-docs-envs-module"><span class="std std-ref">envs API</span></a> .</p>
+</section>
+</section>
+<section id="integration-of-a-new-environment">
+<span id="chap-env-design-sec-integration"></span><h2>Integration of a New Environment<a class="headerlink" href="#integration-of-a-new-environment" title="Permalink to this heading">¶</a></h2>
+<p>The most straightforward and fastest method for integration of a new environment is to wrap the original multi-agent environment with the <em>Standard API</em> mentioned above.
+In this section, we will use <em>Google Research Football (GRF)</em> as an example to show <strong>how to integrate a multi-agent environment into dist-MARL</strong>.</p>
+<p>The wrapper of <em>GRF</em> is in <code class="file docutils literal notranslate"><span class="pre">src/envs/env_wrappers/gfootball_wrapper.py</span></code> and you can also view <a class="reference internal" href="../api_docs/envs/envs.env_wrappers.html#api-docs-envs-module-subpackage-env-wrappers-gfootball"><span class="std std-ref">gfootball_wrapper API</span></a> for details.
+Though <em>GRF</em> is a typical environment with discrete action space, the flow for an environment with continuous action space (such as <em>Multi-agent Partical Environment</em> ) differs only in some details, which is explained in <a class="reference internal" href="#chap-env-design-sec-integration-subsec-continuous-action-space"><span class="std std-ref">Environments with Continuous Action Space</span></a>.</p>
+<section id="inheritance-of-the-base-class">
+<span id="chap-env-design-sec-integration-subsec-inheritance"></span><h3>Inheritance of the Base Class<a class="headerlink" href="#inheritance-of-the-base-class" title="Permalink to this heading">¶</a></h3>
+<p>First of all, make sure the dependencies for the new environment are all installed properly, and then import it as well as the base class <code class="docutils literal notranslate"><span class="pre">MultiAgentEnvBase</span></code>.</p>
+<div class="highlight-python notranslate" id="chap-env-design-sec-integration-subsec-inheritance-code-grf-1"><div class="highlight"><pre><span></span><span class="linenos"> 5</span><span class="o">...</span>
+<span class="linenos"> 6</span><span class="kn">import</span> <span class="nn">gfootball.env</span> <span class="k">as</span> <span class="nn">football_env</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="kn">from</span> <span class="nn">envs</span> <span class="kn">import</span> <span class="n">MultiAgentEnvBase</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">class</span> <span class="nc">GoogleFootballEnv</span><span class="p">(</span><span class="n">MultiAgentEnvBase</span><span class="p">):</span>
+<span class="linenos">12</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">13</span><span class="sd">    The Google Research Football environment wrapper.</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="sd">    Attributes:</span>
+<span class="linenos">16</span><span class="sd">        env (gfootball.env.football_env.FootballEnv): The Google Research Football Environment instance.</span>
+<span class="linenos">17</span><span class="sd">        episode_limit (int): The maximum steps of a single episode, and reaching it will lead to ``terminated=True``.</span>
+<span class="linenos">18</span><span class="sd">        map_name (str): The name of the map.</span>
+<span class="linenos">19</span><span class="sd">        _action_spaces (list[gym.spaces.Discrete]): action spaces of all agents, private.</span>
+<span class="linenos">20</span><span class="sd">        _n_agents (int): The number of players controlled by the RL agents, private.</span>
+<span class="linenos">21</span><span class="sd">        _obs (np.ndarray): The current observation, shape: [_n_agents, obs_size], private.</span>
+<span class="linenos">22</span><span class="sd">        _observation_spaces (list[gym.spaces.Box]): observation spaces of all agents, private.</span>
+<span class="linenos">23</span><span class="sd">        _seed (int): The random seed for the environment, private variable, private.</span>
+<span class="linenos">24</span><span class="sd">        _time_step (int): The timestep, will be reset to 0 at the beginning of every episode, private.</span>
+<span class="linenos">25</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="linenos">28</span>        <span class="bp">self</span><span class="p">,</span>
+<span class="linenos">29</span>        <span class="n">n_agents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="linenos">30</span>        <span class="n">episode_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+<span class="linenos">31</span>        <span class="n">map_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;academy_3_vs_1_with_keeper&quot;</span><span class="p">,</span>
+<span class="linenos">32</span>        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="linenos">33</span>        <span class="o">**</span><span class="n">kwargs</span>
+<span class="linenos">34</span>    <span class="p">):</span>
+<span class="linenos">35</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">36</span><span class="sd">        Initialize a GRF instance with ``map_name`` given.</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="sd">        Args:</span>
+<span class="linenos">39</span><span class="sd">            n_agents (int, optional): The number of players controlled by the RL agents, corresponding to arg ``number_of_left_players_agent_controls`` in the GRF environment class, defaults to 3.</span>
+<span class="linenos">40</span><span class="sd">            episode_limit (int, optional): The maximum steps of a single episode, and reaching it will lead to ``terminated=True``, defaults to 200.</span>
+<span class="linenos">41</span><span class="sd">            map_name (str, optional): The name of the environment map, defaults to &quot;academy_3_vs_1_with_keeper&quot;.</span>
+<span class="linenos">42</span><span class="sd">            seed (int, optional): The random seed, defaults to ``None`` and the environment will generate a random integer in [1e6, 1e7] as ``self._seed``.</span>
+<span class="linenos">43</span><span class="sd">            **kwargs: keyword arguments for Google Research Football.</span>
+<span class="linenos">44</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">45</span>        <span class="bp">self</span><span class="o">.</span><span class="n">map_name</span> <span class="o">=</span> <span class="n">map_name</span>
+<span class="linenos">46</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_n_agents</span> <span class="o">=</span> <span class="n">n_agents</span>
+<span class="linenos">47</span>        <span class="bp">self</span><span class="o">.</span><span class="n">episode_limit</span> <span class="o">=</span> <span class="n">episode_limit</span>
+<span class="linenos">48</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_seed</span> <span class="o">=</span> <span class="n">seed</span> <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="mf">1e7</span><span class="p">)</span>
+<span class="linenos">49</span>
+<span class="linenos">50</span>        <span class="o">...</span>
+</pre></div>
+</div>
+<p>The attributes of the environment wrapper class could be diverse for different environments and you can always adjust them as needed, except that <code class="docutils literal notranslate"><span class="pre">self.episode_limit</span></code> and <code class="docutils literal notranslate"><span class="pre">self._seed</span></code> are <strong>required for all environments</strong>.
+The former aims to avoid the environment producing excessively long trajectories that yield greater challenge to the multi-agent reinforcement learning algorithms.
+And the latter, just in case, is used for reproducing the experimental results.</p>
+<p>Besides, <code class="docutils literal notranslate"><span class="pre">self.map_name</span></code> is recommended to manage many different maps in one environment, such as ‘2s3z’ in <em>SMAC</em> and ‘academy_3_vs_1_with_keeper’ in <em>GRF</em>.</p>
+<p>With the basic attributes set, an instance of the environment should be created with the given parameters.
+Here, method <code class="docutils literal notranslate"><span class="pre">football_env.create_environment()</span></code> is provided by the original gfootball library, and you should call the similar function for your own environment.
+In this way, all methods could achieve their own purposes by calling functions of <code class="docutils literal notranslate"><span class="pre">self.env</span></code>.</p>
+<div class="highlight-python notranslate" id="chap-env-design-sec-integration-subsec-inheritance-code-grf-2"><div class="highlight"><pre><span></span><span class="linenos">50</span>        <span class="c1"># create the environment instance</span>
+<span class="linenos">51</span>        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">football_env</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span>
+<span class="linenos">52</span>            <span class="n">env_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_name</span><span class="p">,</span>
+<span class="linenos">53</span>            <span class="n">number_of_left_players_agent_controls</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_agents</span><span class="p">,</span>
+<span class="linenos">54</span>            <span class="n">channel_dimensions</span><span class="o">=</span><span class="p">(</span><span class="n">football_env</span><span class="o">.</span><span class="n">observation_preprocessing</span><span class="o">.</span><span class="n">SMM_WIDTH</span><span class="p">,</span> <span class="n">football_env</span><span class="o">.</span><span class="n">observation_preprocessing</span><span class="o">.</span><span class="n">SMM_HEIGHT</span><span class="p">),</span>
+<span class="linenos">55</span>            <span class="o">**</span><span class="n">kwargs</span>
+<span class="linenos">56</span>        <span class="p">)</span>
+<span class="linenos">57</span>        <span class="c1"># set the random seed</span>
+<span class="linenos">58</span>        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+<span class="linenos">59</span>
+<span class="linenos">60</span>        <span class="c1"># set the action space and observation space</span>
+<span class="linenos">61</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_action_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">nvec</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_agents</span><span class="p">)]</span>
+<span class="linenos">62</span>
+<span class="linenos">63</span>        <span class="n">obs_space_low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">64</span>        <span class="n">obs_space_high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">high</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">65</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_observation_spaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">obs_space_low</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">obs_space_high</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_agents</span><span class="p">)]</span>
+<span class="linenos">66</span>
+<span class="linenos">67</span>        <span class="c1"># init other variables</span>
+<span class="linenos">68</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_obs</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="linenos">69</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_time_step</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</section>
+<section id="wrapping-with-standard-api">
+<span id="chap-env-design-sec-integration-subsec-wrap"></span><h3>Wrapping with Standard API<a class="headerlink" href="#wrapping-with-standard-api" title="Permalink to this heading">¶</a></h3>
+<p>Here we will list some important methods of the wrapper class to show the style of wrapping.</p>
+<p class="rubric">Available Actions</p>
+<p>Available actions are useful in some environments to restrain the behaviour of agents avoiding illegal and unstable actions.
+As for these environments (such as <em>SMAC</em> ), you can call its original API to get available actions.
+However, for environments like <em>GRF</em>, all actions are available at anytime.
+Therefore, here we set vector of ones for each agent as their <code class="docutils literal notranslate"><span class="pre">avail_actions</span></code> .</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">136</span><span class="k">def</span> <span class="nf">getAvailActions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="linenos">137</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">138</span><span class="sd">    Obtain the available actions of all agents in a list. Note that all actions are available in GRF at anytime.</span>
+<span class="linenos">139</span>
+<span class="linenos">140</span><span class="sd">    Returns:</span>
+<span class="linenos">141</span><span class="sd">        list[np.ndarray]: **avail_actions**: A list of available actions for all agents.</span>
+<span class="linenos">142</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">143</span>    <span class="k">return</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_actions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p class="rubric">Information about Environments</p>
+<p>Basic information about the environments would be important for creating policy or critic networks, and the information will be stored in <code class="docutils literal notranslate"><span class="pre">env_info_dict</span></code> for the program to read from it.
+The keys listed below must be included in every environment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">157</span><span class="k">def</span> <span class="nf">getEnvInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="linenos">158</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">159</span><span class="sd">    Obtain the environment information in a Dict.</span>
+<span class="linenos">160</span>
+<span class="linenos">161</span><span class="sd">    Returns:</span>
+<span class="linenos">162</span><span class="sd">        dict: **env_info_dict**: The environment information, which contains ``n_actions, n_agents, episode_limit, obs_size, state_size, step_info``.</span>
+<span class="linenos">163</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">164</span>    <span class="n">env_info_dict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos">165</span>        <span class="s2">&quot;state_size&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getStateShape</span><span class="p">()</span><span class="o">.</span><span class="n">prod</span><span class="p">()),</span>
+<span class="linenos">166</span>        <span class="s2">&quot;obs_size&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getObsShape</span><span class="p">()</span><span class="o">.</span><span class="n">prod</span><span class="p">()),</span>
+<span class="linenos">167</span>        <span class="s2">&quot;n_actions&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_actions</span><span class="p">,</span>
+<span class="linenos">168</span>        <span class="s2">&quot;n_agents&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">,</span>
+<span class="linenos">169</span>        <span class="s2">&quot;episode_limit&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">episode_limit</span><span class="p">,</span>
+<span class="linenos">170</span>        <span class="s2">&quot;step_info&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;score_reward&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="linenos">171</span>    <span class="p">}</span>
+<span class="linenos">172</span>
+<span class="linenos">173</span>    <span class="k">return</span> <span class="n">env_info_dict</span>
+</pre></div>
+</div>
+<p class="rubric">Observations and States</p>
+<p>The most important things for decisions are the current observations and state.
+The observations should be a list of <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>, which is the observation of a single agent.
+The state is the global information and it should be a <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.
+As for the <em>GRF</em> environment, we update the attribute <code class="docutils literal notranslate"><span class="pre">self._obs</span></code> after every step taken, and using the observations from all agents as the current state.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">175</span><span class="k">def</span> <span class="nf">getObs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="linenos">176</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">177</span><span class="sd">    Obtain all agents&#39; observations in a list.</span>
+<span class="linenos">178</span>
+<span class="linenos">179</span><span class="sd">    Returns:</span>
+<span class="linenos">180</span><span class="sd">        list[np.ndarray]: **observations**: The list of observations for all agents.</span>
+<span class="linenos">181</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">182</span>    <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_obs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">)]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">207</span><span class="k">def</span> <span class="nf">getState</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="linenos">208</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">209</span><span class="sd">    Obtain the global state.</span>
+<span class="linenos">210</span>
+<span class="linenos">211</span><span class="sd">    Returns:</span>
+<span class="linenos">212</span><span class="sd">        np.ndarray: **state**: The global state for all agents.</span>
+<span class="linenos">213</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">214</span>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="rubric">Restart a New Episode</p>
+<p>Remember to restore the variables to the original values every time you reset the environment to restart a new episode.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">225</span><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="linenos">226</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">227</span><span class="sd">    Reset the state of the environment and return the initial observations.</span>
+<span class="linenos">228</span>
+<span class="linenos">229</span><span class="sd">    Returns:</span>
+<span class="linenos">230</span><span class="sd">        (list[np.ndarray], np.ndarray): **(observations, state)**: (The initial observations, The global state for all agents)</span>
+<span class="linenos">231</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">232</span>    <span class="bp">self</span><span class="o">.</span><span class="n">_obs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="linenos">233</span>    <span class="bp">self</span><span class="o">.</span><span class="n">_time_step</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">234</span>
+<span class="linenos">235</span>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObs</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">getState</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="rubric">The Interaction Method</p>
+<p>The new wrapped <code class="docutils literal notranslate"><span class="pre">step()</span></code> function could be implemented by calling the original method of the environment instance.
+Besides, the format of the returns must be carefully checked.
+As for <em>GRF</em>, we have devised another method <code class="docutils literal notranslate"><span class="pre">self._checkTermination()</span></code> to enable it with different termination conditions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">258</span><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]:</span>
+<span class="linenos">259</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">260</span><span class="sd">    Run one timestep of the environment&#39;s dynamics. When the end of episode is reached, you are responsible for</span>
+<span class="linenos">261</span><span class="sd">    calling func ``reset()`` to reset this environment&#39;s state.</span>
+<span class="linenos">262</span>
+<span class="linenos">263</span><span class="sd">    Accepts the actions and returns a tuple (observations, reward, terminated, info), where:</span>
+<span class="linenos">264</span>
+<span class="linenos">265</span><span class="sd">    - **observations**: A list of agents&#39; observations of the current state.</span>
+<span class="linenos">266</span><span class="sd">    - **reward**: Amount of reward returned after previous actions.</span>
+<span class="linenos">267</span><span class="sd">    - **terminated (a.k.a. done)**: Whether the episode has ended, in which case further ``step()`` calls will return undefined results.</span>
+<span class="linenos">268</span><span class="sd">    - **info**: Contains auxiliary diagnostic information (helpful for debugging, and sometimes learning).</span>
+<span class="linenos">269</span>
+<span class="linenos">270</span><span class="sd">    Args:</span>
+<span class="linenos">271</span><span class="sd">        actions (np.ndarray or list): Actions taken by the agents.</span>
+<span class="linenos">272</span>
+<span class="linenos">273</span><span class="sd">    Returns:</span>
+<span class="linenos">274</span><span class="sd">        (list[np.ndarray], float, bool, dict): **(observations, reward, terminated, info)**</span>
+<span class="linenos">275</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">276</span>    <span class="bp">self</span><span class="o">.</span><span class="n">_time_step</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">277</span>    <span class="n">observations</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">actions</span><span class="p">))</span>
+<span class="linenos">278</span>
+<span class="linenos">279</span>    <span class="c1"># update variables</span>
+<span class="linenos">280</span>    <span class="n">sum_reward</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rewards</span><span class="p">)</span>
+<span class="linenos">281</span>    <span class="n">terminated</span> <span class="o">=</span> <span class="n">terminated</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">_checkTermination</span><span class="p">()</span>
+<span class="linenos">282</span>    <span class="bp">self</span><span class="o">.</span><span class="n">_obs</span> <span class="o">=</span> <span class="n">observations</span>
+<span class="linenos">283</span>
+<span class="linenos">284</span>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getObs</span><span class="p">(),</span> <span class="n">sum_reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">info</span>
+</pre></div>
+</div>
+</section>
+<section id="environments-with-continuous-action-space">
+<span id="chap-env-design-sec-integration-subsec-continuous-action-space"></span><h3>Environments with Continuous Action Space<a class="headerlink" href="#environments-with-continuous-action-space" title="Permalink to this heading">¶</a></h3>
+<p>Continuous action space is supported by dist-MARL as well except that some details need to be clarified.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_actions</span></code> means the dimensions of the action vectors.
+Besides, if the agents are <strong>heterogeneous</strong> and have different dimensions of actions, <code class="docutils literal notranslate"><span class="pre">gym.spaces.Box()</span></code> is recommended to construct the property <code class="docutils literal notranslate"><span class="pre">action_space</span></code>.
+For exaple, where <code class="docutils literal notranslate"><span class="pre">self.n_actions_list</span></code> is the list of action dimensions for every agent:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">_action_spaces</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+        <span class="n">low</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_actions_list</span><span class="p">[</span><span class="n">agent_id</span><span class="p">],</span>
+        <span class="n">high</span><span class="o">=</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_actions_list</span><span class="p">[</span><span class="n">agent_id</span><span class="p">],</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Similar to <em>GRF</em>, the all actions are more likely to be available at anytime.</p></li>
+<li><p>The action selector is the last layer before the actions are chosen, and it should be in the continuous style. Please check <code class="file docutils literal notranslate"><span class="pre">src/common/action_selector.py</span></code> for details.</p></li>
+</ul>
+</section>
+<section id="register-your-environment-in-the-module">
+<span id="chap-env-design-sec-integration-subsec-include-in-envs"></span><h3>Register Your Environment in the Module<a class="headerlink" href="#register-your-environment-in-the-module" title="Permalink to this heading">¶</a></h3>
+<p>Finally, don’t forget to import your new environment into the module <code class="docutils literal notranslate"><span class="pre">envs</span></code> and register it like others, e.g.,</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">src/envs/__init__.py</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">29</span><span class="n">env_register</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="k">try</span><span class="p">:</span>
+<span class="linenos">33</span>    <span class="n">gfootball_support</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">34</span>    <span class="kn">from</span> <span class="nn">.env_wrappers.gfootball_wrapper</span> <span class="kn">import</span> <span class="n">GoogleFootballEnv</span>
+<span class="linenos">35</span>    <span class="n">env_register</span><span class="p">[</span><span class="s1">&#39;gfootball&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">envRegister</span><span class="p">,</span> <span class="n">env_fn</span><span class="o">=</span><span class="n">GoogleFootballEnv</span><span class="p">)</span>
+<span class="linenos">36</span><span class="k">except</span><span class="p">:</span>
+<span class="linenos">37</span>    <span class="n">gfootball_support</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="test-your-wrapped-environment">
+<span id="chap-env-design-sec-integration-subsec-test"></span><h3>Test Your Wrapped Environment<a class="headerlink" href="#test-your-wrapped-environment" title="Permalink to this heading">¶</a></h3>
+<p>We provide the unit test for integrated environments in <code class="file docutils literal notranslate"><span class="pre">test/test_envs.py</span></code> and testing your wrapped environment before directly using it is highly recommended.</p>
+<p>All you need to do is writing such a function to create an instance for the test method <code class="docutils literal notranslate"><span class="pre">testEnvironmentAPI()</span></code>.
+Here we also use <em>GRF</em> as the example to show it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">30</span><span class="k">def</span> <span class="nf">createGRFEnv</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;grf_qmix&#39;</span><span class="p">,</span>
+<span class="linenos">31</span>                 <span class="n">n_agents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+<span class="linenos">32</span>                 <span class="n">map_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;academy_3_vs_1_with_keeper&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">envs</span><span class="o">.</span><span class="n">MultiAgentEnvBase</span><span class="p">:</span>
+<span class="linenos">33</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">34</span><span class="sd">    Create an instance of GRF environment with ``map_name`` and assert the types of the properties.</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="sd">    Args:</span>
+<span class="linenos">37</span><span class="sd">        cfg (str, optional): The config name, defaults to ``grf_qmix``.</span>
+<span class="linenos">38</span><span class="sd">        n_agents (int, optional): The number of the players controlled by agents, defaults to 3.</span>
+<span class="linenos">39</span><span class="sd">        map_name (str, optional): The name of the map, defaults to &quot;academy_3_vs_1_with_keeper&quot;.</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="sd">    Returns:</span>
+<span class="linenos">42</span><span class="sd">        envs.env_wrappers.GoogleFootballEnv: **env**: An instance of GRF environment with ``map_name``.</span>
+<span class="linenos">43</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">44</span>    <span class="c1"># get the env class and keyword arguments based on config ``cfg``</span>
+<span class="linenos">45</span>    <span class="n">env_fn</span><span class="p">,</span> <span class="n">env_kwargs</span> <span class="o">=</span> <span class="n">getEnvFnAndKwargs</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+<span class="linenos">46</span>    <span class="k">assert</span> <span class="n">env_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">47</span>    <span class="k">assert</span> <span class="n">env_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>    <span class="c1"># create env</span>
+<span class="linenos">50</span>    <span class="n">env_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+<span class="linenos">51</span>        <span class="s1">&#39;map_name&#39;</span><span class="p">:</span> <span class="n">map_name</span><span class="p">,</span>
+<span class="linenos">52</span>        <span class="s1">&#39;n_agents&#39;</span><span class="p">:</span> <span class="n">n_agents</span>
+<span class="linenos">53</span>        <span class="p">}</span>
+<span class="linenos">54</span>    <span class="p">)</span>
+<span class="linenos">55</span>    <span class="n">env</span> <span class="o">=</span> <span class="n">env_fn</span><span class="p">(</span><span class="o">**</span><span class="n">env_kwargs</span><span class="p">)</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>    <span class="c1"># assert properties</span>
+<span class="linenos">58</span>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">n_actions</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+<span class="linenos">59</span>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">n_agents</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+<span class="linenos">60</span>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_spaces</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">)</span>
+<span class="linenos">61</span>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_spaces</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gym</span><span class="o">.</span><span class="n">spaces</span><span class="o">.</span><span class="n">Box</span><span class="p">)</span>
+<span class="linenos">62</span>
+<span class="linenos">63</span>    <span class="k">return</span> <span class="n">env</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">30</span><span class="k">if</span> <span class="n">envs</span><span class="o">.</span><span class="n">gfootball_support</span><span class="p">:</span>
+<span class="linenos">31</span>    <span class="kn">import</span> <span class="nn">gym</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span>    <span class="c1"># test Google Research Football Environment</span>
+<span class="linenos">34</span>    <span class="n">grf_env</span> <span class="o">=</span> <span class="n">createGRFEnv</span><span class="p">()</span>
+<span class="linenos">35</span>    <span class="n">testEnvironmentAPI</span><span class="p">(</span><span class="n">grf_env</span><span class="p">)</span>
+<span class="linenos">36</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;------------------------------------------------------&quot;</span><span class="p">)</span>
+<span class="linenos">37</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GRF environment has been test successfully!&quot;</span><span class="p">)</span>
+<span class="linenos">38</span>    <span class="k">del</span> <span class="n">grf_env</span>
+</pre></div>
+</div>
+<p>Congradulations! Once the new integrated environment passes the unit test, it should be well compatible into dist-MARL.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="logging_instructions.html" class="btn btn-neutral float-left" title="Logging Instructions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../develop_docs/develop_instructions.html" class="btn btn-neutral float-right" title="dist-MARL 开发指南" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, thu-rllab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
